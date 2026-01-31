@@ -23,27 +23,37 @@ class User
 
     // Getters
 
-    public function getId(): ?int{
+    public function getId(): ?int
+    {
         return $this->id;
     }
 
-    public function getName(): string{
+    public function getName(): string
+    {
         return $this->name;
     }
 
-    public function getEmailVerifiedAt(): ?DateTime{
+    public function getEmail(): string
+    {
+        return $this->email;
+    }
+
+    public function getEmailVerifiedAt(): ?DateTime
+    {
         return $this->emailVerifiedAt;
     }
 
-    public function getPassword(): string{
+    public function getPassword(): string
+    {
         return $this->password;
     }
 
-    public function getRememberToken(): ?string{
+    public function getRememberToken(): ?string
+    {
         return $this->rememberToken;
     }
 
-    // Validadores
+    // Validador
 
     public function validate()
     {
@@ -64,5 +74,15 @@ class User
         if (empty($this->password)) {
             throw new InvalidArgumentException('A senha é obrigatória.');
         }
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'email' => $this->email,
+            'createdAt' => $this->createdAt,
+        ];
     }
 }

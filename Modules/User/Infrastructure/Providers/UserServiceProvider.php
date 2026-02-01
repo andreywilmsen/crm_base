@@ -17,7 +17,7 @@ class UserServiceProvider extends ServiceProvider
     }
     public function boot(Dispatcher $events)
     {
-        $this->loadViewsFrom(__DIR__ . '/Views', 'user');
+        $this->loadViewsFrom(__DIR__ . '/../Views', 'user');
         $this->registerRoutes();
         $events->listen(BuildingMenu::class, function (BuildingMenu $event) {
             $event->menu->add([

@@ -19,10 +19,9 @@ class UserController extends Controller
         try {
             $users = $getAllUseCase->execute();
             $usersArray = array_map(fn($user) => $user->toArray(), $users);
-            return response()->json([
-                'users' => $usersArray,
-                'status' => 'Success'
-            ], 200);
+            return view('user::index', [
+                'users' => $usersArray
+            ]);
         } catch (\InvalidArgumentException $e) {
             return response()->json(['error' => $e->getMessage()], 400);
         } catch (\Exception $e) {
@@ -30,14 +29,16 @@ class UserController extends Controller
         }
     }
 
+    public function create()
+    {
+        return view('user::form');
+    }
+
     public function get(GetUser $getUseCase, int $id)
     {
         try {
             $user = $getUseCase->execute($id);
-            return response()->json([
-                'users' => $user->toArray(),
-                'status' => 'Success'
-            ], 200);
+            return view('user::form', ['user' => $user->toArray()]);
         } catch (\InvalidArgumentException $e) {
             return response()->json(['error' => $e->getMessage()], 404);
         } catch (\Exception $e) {
@@ -51,10 +52,9 @@ class UserController extends Controller
             $dto = UserCreateDTO::fromRequest($request);
             $user = $registerUseCase->execute($dto);
 
-            return response()->json([
-                'user' => $user->toArray(),
-                'status' => 'Success'
-            ], 200);
+            return redirect()
+                ->route('user.index')
+                ->with('success', 'Usuário cadastrado com sucesso!');
         } catch (\InvalidArgumentException $e) {
             return response()->json(['error' => $e->getMessage()], 400);
         } catch (\Exception $e) {
@@ -69,10 +69,9 @@ class UserController extends Controller
             $dto = UserUpdateDTO::fromRequest($request, $id);
             $user = $updateUseCase->execute($dto);
 
-            return response()->json([
-                'user' => $user->toArray(),
-                'status' => 'Success'
-            ], 200);
+            return redirect()
+                ->route('user.index')
+                ->with('success', 'Usuário atualizado com sucesso!');
         } catch (\InvalidArgumentException $e) {
             return response()->json(['error' => $e->getMessage()], 400);
         } catch (\Exception $e) {
@@ -84,6 +83,8 @@ class UserController extends Controller
     {
         try {
             $deleteUseCase->execute($id);
+
+            return redirect()->route('user.index')->with('success', 'Usuário removido com sucesso!');
             return response()->json([
                 'message' => 'Usuário deletado com sucesso',
                 'status' => 'Success'

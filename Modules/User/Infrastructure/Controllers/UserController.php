@@ -10,6 +10,7 @@ use Modules\User\Application\UseCases\DeleteUser;
 use Modules\User\Application\UseCases\GetAllUsers;
 use Modules\User\Application\UseCases\GetUser;
 use Modules\User\Application\UseCases\RegisterUser;
+use Modules\User\Application\UseCases\ResetPasswordUser;
 use Modules\User\Application\UseCases\UpdateUser;
 use Spatie\Permission\Models\Role;
 
@@ -102,6 +103,23 @@ class UserController extends Controller
             return response()->json(['error' => $e->getMessage()], 400);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Erro interno do servidor.'], 500);
+        }
+    }
+
+    public function resetPassword(int $id, ResetPasswordUser $resetPasswordUseCase)
+    {
+        try {
+            $resetPasswordUseCase->execute($id);
+
+            return redirect()
+                ->route('user.index')
+                ->with('success', 'Senha redefinida com sucesso para o padrão do sistema!');
+        } catch (\InvalidArgumentException $e) {
+            // Volta para a página anterior com a mensagem de erro
+            return back()->withErrors(['error' => $e->getMessage()]);
+        } catch (\Exception $e) {
+            // Erro genérico para não expor detalhes técnicos
+            return back()->withErrors(['error' => 'Não foi possível resetar a senha. Tente novamente.']);
         }
     }
 }

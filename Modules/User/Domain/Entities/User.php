@@ -83,6 +83,13 @@ class User
         }
     }
 
+    // Utilitarios
+
+    public function resetPassword(string $hashedPassword): string
+    {
+        return $this->password = $hashedPassword;
+    }
+
     public function toArray(): array
     {
         return [

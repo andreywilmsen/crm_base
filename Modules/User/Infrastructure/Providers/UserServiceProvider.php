@@ -14,6 +14,7 @@ class UserServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->bind(UserRepositoryInterface::class, EloquentUserRepository::class);
+        $this->mergeConfigFrom(__DIR__.'/../Config/config.php', 'user_module');
     }
     public function boot(Dispatcher $events)
     {

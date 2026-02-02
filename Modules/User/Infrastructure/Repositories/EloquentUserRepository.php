@@ -47,6 +47,13 @@ class EloquentUserRepository implements UserRepositoryInterface
         $this->userModel->destroy($user->getId());
     }
 
+    public function resetPassword(User $user, string $hashedPassword): void
+    {
+        $user->resetPassword($hashedPassword);
+
+        $this->save($user);
+    }
+
     public function findById(int $id): ?User
     {
         $user = $this->userModel->with('roles')->where('id', $id)->first();
@@ -71,8 +78,8 @@ class EloquentUserRepository implements UserRepositoryInterface
 
     public function findAll(): array
     {
-       return $this->userModel->with('roles')->get() 
-        ->map(fn($model) => UserMapper::toEntity($model))
-        ->all();
+        return $this->userModel->with('roles')->get()
+            ->map(fn($model) => UserMapper::toEntity($model))
+            ->all();
     }
 }

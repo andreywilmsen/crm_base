@@ -14,6 +14,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('user')->group(function () {
 
     Route::post('/', [UserController::class, 'store'])->name('user.store');
 
+    Route::put('/{id}/reset-password', [UserController::class, 'resetPassword'])->name('user.reset-password');
+
     Route::put('/{id}', [UserController::class, 'update'])->name('user.update');
 
     Route::delete('/{id}', [UserController::class, 'delete'])->name('user.destroy');

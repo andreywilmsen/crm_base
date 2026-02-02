@@ -12,7 +12,6 @@
             <h3 class="card-title">Dados do Usuário</h3>
         </div>
         
-        {{-- Se existir $user, vai para update (PUT), se não, vai para store (POST) --}}
         <form action="{{ isset($user) ? route('user.update', $user['id']) : route('user.store') }}" method="POST">
             @csrf
             @if(isset($user))

@@ -74,6 +74,15 @@ class UserController extends Controller
             $dto = UserUpdateDTO::fromRequest($request, $id);
             $user = $updateUseCase->execute($dto);
 
+            if (auth()->id() === $id) {
+                auth()->logout();
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+
+                return redirect()->route('login')
+                    ->with('info', 'Sua permissão foi alterada. Por favor, faça login novamente.');
+            }
+
             return redirect()
                 ->route('user.index')
                 ->with('success', 'Usuário atualizado com sucesso!');

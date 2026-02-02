@@ -41,7 +41,10 @@ echo   INSTALACAO CONCLUIDA!
 echo ====================================================
 echo   PROXIMOS PASSOS OBRIGATORIOS:
 echo   1. Configurar .env (DB_DATABASE, DB_USERNAME, etc).
-echo   2. Executar manualmente: php artisan migrate
+echo   2. Executar: php artisan migrate --seed
+echo.
+echo   NOTA: O comando --seed e essencial para criar os 
+echo   perfis (Admin/Funcionario) e seu usuario de acesso.
 echo ====================================================
 
 echo [8/8] Abrindo o projeto...

@@ -35,6 +35,7 @@
             @endif
 
             <div class="card-body">
+                {{-- Nome --}}
                 <div class="form-group">
                     <label for="name">Nome Completo</label>
                     <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" 
@@ -42,6 +43,7 @@
                     @error('name') <span class="invalid-feedback">{{ $message }}</span> @enderror
                 </div>
 
+                {{-- E-mail --}}
                 <div class="form-group">
                     <label for="email">E-mail</label>
                     <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" 
@@ -49,6 +51,7 @@
                     @error('email') <span class="invalid-feedback">{{ $message }}</span> @enderror
                 </div>
 
+                {{-- Perfil de Acesso --}}
                 <div class="form-group">
                     <label for="role">Perfil de Acesso</label>
                     <select name="role" id="role" class="form-control @error('role') is-invalid @enderror" required>
@@ -63,22 +66,34 @@
                     @error('role') <span class="invalid-feedback">{{ $message }}</span> @enderror
                 </div>
 
+                {{-- Lógica da Senha (Apenas na Criação) --}}
                 @if(!isset($user))
-                    <div class="form-group">
-                        <label for="password">Senha Inicial</label>
-                        <input type="password" name="password" class="form-control @error('password') is-invalid @enderror" 
-                               id="password" placeholder="Digite a senha inicial" required>
-                        @error('password') <span class="invalid-feedback">{{ $message }}</span> @enderror
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="password">Senha Inicial</label>
+                                <input type="password" name="password" class="form-control @error('password') is-invalid @enderror" 
+                                       id="password" placeholder="Digite a senha" required>
+                                @error('password') <span class="invalid-feedback">{{ $message }}</span> @enderror
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="password_confirmation">Confirmar Senha</label>
+                                <input type="password" name="password_confirmation" class="form-control" 
+                                       id="password_confirmation" placeholder="Repita a senha" required>
+                            </div>
+                        </div>
                     </div>
                 @else
+                    {{-- Opções de Segurança (Apenas na Edição) --}}
                     <div class="form-group mt-4">
                         <label>Segurança</label>
                         <br>
-                        {{-- Botão com a classe para o SweetAlert --}}
                         <button type="button" class="btn btn-warning btn-reset-password">
                             <i class="fas fa-sync"></i> Resetar Senha para Padrão
                         </button>
-                        <p class="text-muted mt-2"><small>A senha voltará para o padrão definido no sistema.</small></p>
+                        <p class="text-muted mt-2"><small>A senha voltará para o padrão definido no sistema (padrão de novos usuários).</small></p>
                     </div>
                 @endif
             </div>
@@ -121,7 +136,7 @@
                         if (form.length) {
                             form.submit();
                         } else {
-                            Swal.fire('Erro!', 'Formulário de reset não encontrado no HTML.', 'error');
+                            Swal.fire('Erro!', 'Formulário de reset não encontrado.', 'error');
                         }
                     }
                 });

@@ -57,6 +57,8 @@ class UserController extends Controller
     public function store(RegisterUser $registerUseCase, Request $request)
     {
         try {
+            $request->validate(['name' => 'required|string|max:255', 'email' => 'required|email|unique:users,email', 'password' => 'required|confirmed|min:8', 'role' => 'required']);
+
             $dto = UserCreateDTO::fromRequest($request);
             $user = $registerUseCase->execute($dto);
 
@@ -115,10 +117,8 @@ class UserController extends Controller
                 ->route('user.index')
                 ->with('success', 'Senha redefinida com sucesso para o padrão do sistema!');
         } catch (\InvalidArgumentException $e) {
-            // Volta para a página anterior com a mensagem de erro
             return back()->withErrors(['error' => $e->getMessage()]);
         } catch (\Exception $e) {
-            // Erro genérico para não expor detalhes técnicos
             return back()->withErrors(['error' => 'Não foi possível resetar a senha. Tente novamente.']);
         }
     }

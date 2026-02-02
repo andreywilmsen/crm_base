@@ -20,11 +20,13 @@ class UserServiceProvider extends ServiceProvider
         $this->loadViewsFrom(__DIR__ . '/../Views', 'user');
         $this->registerRoutes();
         $events->listen(BuildingMenu::class, function (BuildingMenu $event) {
-            $event->menu->add([
-                'text' => 'Usuários',
-                'icon' => 'fas fa-fw fa-users',
-                'route' => 'user.index',
-            ]);
+            if (auth()->check() && auth()->user()->hasRole('admin')) {
+                $event->menu->add([
+                    'text' => 'Usuários',
+                    'icon' => 'fas fa-fw fa-users',
+                    'route' => 'user.index',
+                ]);
+            }
         });
     }
     public function registerRoutes()

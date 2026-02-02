@@ -11,6 +11,7 @@ use Modules\User\Application\UseCases\GetAllUsers;
 use Modules\User\Application\UseCases\GetUser;
 use Modules\User\Application\UseCases\RegisterUser;
 use Modules\User\Application\UseCases\UpdateUser;
+use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
@@ -31,14 +32,20 @@ class UserController extends Controller
 
     public function create()
     {
-        return view('user::form');
+        $roles = Role::all();
+        return view('user::form', compact('roles'));
     }
 
     public function get(GetUser $getUseCase, int $id)
     {
         try {
             $user = $getUseCase->execute($id);
-            return view('user::form', ['user' => $user->toArray()]);
+            $roles = Role::all();
+
+            return view('user::form', [
+                'user' => $user->toArray(),
+                'roles' => $roles
+            ]);
         } catch (\InvalidArgumentException $e) {
             return response()->json(['error' => $e->getMessage()], 404);
         } catch (\Exception $e) {
@@ -55,10 +62,8 @@ class UserController extends Controller
             return redirect()
                 ->route('user.index')
                 ->with('success', 'Usuário cadastrado com sucesso!');
-        } catch (\InvalidArgumentException $e) {
-            return response()->json(['error' => $e->getMessage()], 400);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Erro interno do servidor.'], 500);
+            return back()->withErrors(['error' => $e->getMessage()])->withInput();
         }
     }
 
@@ -83,12 +88,7 @@ class UserController extends Controller
     {
         try {
             $deleteUseCase->execute($id);
-
             return redirect()->route('user.index')->with('success', 'Usuário removido com sucesso!');
-            return response()->json([
-                'message' => 'Usuário deletado com sucesso',
-                'status' => 'Success'
-            ], 200);
         } catch (\InvalidArgumentException $e) {
             return response()->json(['error' => $e->getMessage()], 400);
         } catch (\Exception $e) {

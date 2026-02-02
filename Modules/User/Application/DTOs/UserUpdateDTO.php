@@ -10,7 +10,8 @@ readonly class UserUpdateDTO
         public int $id,
         public string $name,
         public string $email,
-        public ?string $password = null
+        public ?string $password = null,
+        public ?string $role
     ) {}
 
     public static function fromRequest(Request $request, int $id)
@@ -20,6 +21,7 @@ readonly class UserUpdateDTO
             name: $request->input('name'),
             email: $request->input('email'),
             password: $request->input('password'),
+            role: $request->input('role')
         );
     }
 

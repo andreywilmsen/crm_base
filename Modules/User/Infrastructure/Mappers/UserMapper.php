@@ -37,7 +37,8 @@ class UserMapper
             rememberToken: $data->remember_token,
             emailVerifiedAt: $data->email_verified_at ? new DateTime($data->email_verified_at->format('Y-m-d H:i:s')) : null,
             createdAt: $data->created_at ? new DateTime($data->created_at->format('Y-m-d H:i:s')) : null,
-            updatedAt: $data->updated_at ? new DateTime($data->updated_at->format('Y-m-d H:i:s')) : null
+            updatedAt: $data->updated_at ? new DateTime($data->updated_at->format('Y-m-d H:i:s')) : null,
+            role: $data->roles->first()?->name
         );
     }
 

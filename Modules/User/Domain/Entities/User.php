@@ -15,13 +15,20 @@ class User
         private string $password,
         private ?string $rememberToken,
         private ?DateTime $createdAt = null,
-        private ?DateTime $updatedAt = null
+        private ?DateTime $updatedAt = null,
+        private ?string $role = null
     ) {
         $this->validate();
+        $this->role = $role;
     }
 
 
     // Getters
+
+    public function getRole(): ?string
+    {
+        return $this->role;
+    }
 
     public function getId(): ?int
     {
@@ -82,6 +89,7 @@ class User
             'id' => $this->id,
             'name' => $this->name,
             'email' => $this->email,
+            'role' => $this->role,
             'createdAt' => $this->createdAt,
         ];
     }

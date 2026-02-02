@@ -21,7 +21,8 @@ class UpdateUser
             email: $dto->email,
             emailVerifiedAt: $user->getEmailVerifiedAt(),
             password: $dto->password ? Hash::make($dto->password) : $user->getPassword(),
-            rememberToken: $user->getRememberToken()
+            rememberToken: $user->getRememberToken(),
+            role: $dto->role
         );
 
         return $this->userRepository->save($updatedUser);

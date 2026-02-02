@@ -9,7 +9,8 @@ readonly class UserCreateDTO
     public function __construct(
         public string $name,
         public string $email,
-        public string $password
+        public string $password,
+        public ?string $role,
     ) {}
 
     public static function fromRequest(Request $request)
@@ -18,6 +19,7 @@ readonly class UserCreateDTO
             name: $request->input('name'),
             email: $request->input('email'),
             password: $request->input('password'),
+            role: $request->input('role')
         );
     }
 

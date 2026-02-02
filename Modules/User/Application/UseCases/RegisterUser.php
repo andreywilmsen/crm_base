@@ -20,7 +20,8 @@ class RegisterUser
             email: $dto->email,
             emailVerifiedAt: null,
             password: Hash::make($dto->password),
-            rememberToken: null
+            rememberToken: null,
+            role: $dto->role
         );
 
         return $this->userRepository->save($user);

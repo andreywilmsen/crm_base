@@ -320,7 +320,6 @@ return [
             'url' => 'admin/blog',
             'can' => 'manage-blog',
         ],
-        ['header' => 'MÓDULOS'],
     ],
 
     /*

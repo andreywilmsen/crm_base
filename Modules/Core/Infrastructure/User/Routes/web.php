@@ -1,8 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Modules\User\Infrastructure\Controllers\UserController;
-
+use Modules\Core\Infrastructure\User\Controllers\UserController;
 
 Route::middleware(['auth', 'role:admin'])->prefix('user')->group(function () {
 

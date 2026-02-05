@@ -3,8 +3,8 @@
 namespace Modules\Core\Application\Account\UseCases;
 
 use InvalidArgumentException;
-use Modules\User\Domain\Entities\User;
-use Modules\User\Domain\Repositories\UserRepositoryInterface;
+use Modules\Core\Domain\User\Entities\User;
+use Modules\Core\Domain\User\Repositories\UserRepositoryInterface;
 
 class GetUser
 {

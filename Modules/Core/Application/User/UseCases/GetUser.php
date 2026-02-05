@@ -1,15 +1,16 @@
 <?php
 
-namespace Modules\User\Application\UseCases;
+namespace Modules\Core\Application\User\UseCases;
 
 use InvalidArgumentException;
-use Modules\User\Domain\Repositories\UserRepositoryInterface;
+use Modules\Core\Domain\User\Entities\User;
+use Modules\Core\Domain\User\Repositories\UserRepositoryInterface;
 
-class DeleteUser
+class GetUser
 {
     public function __construct(private UserRepositoryInterface $userRepository) {}
 
-    public function execute(int $id): void
+    public function execute(int $id): User
     {
         $user = $this->userRepository->findById($id);
 
@@ -17,6 +18,6 @@ class DeleteUser
             throw new InvalidArgumentException('Usuário não encontrado.');
         }
 
-        $this->userRepository->delete($user);
+        return $user;
     }
 }

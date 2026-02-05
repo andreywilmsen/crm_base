@@ -1,9 +1,9 @@
 <?php
 
-namespace Modules\User\Application\UseCases;
+namespace Modules\Core\Application\User\UseCases;
 
 use Illuminate\Support\Facades\Hash;
-use Modules\User\Domain\Repositories\UserRepositoryInterface;
+use Modules\Core\Domain\User\Repositories\UserRepositoryInterface;
 
 class ResetPasswordUser
 {

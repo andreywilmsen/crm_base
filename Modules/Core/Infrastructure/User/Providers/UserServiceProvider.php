@@ -1,20 +1,21 @@
 <?php
 
-namespace Modules\User\Infrastructure\Providers;
+namespace Modules\Core\Infrastructure\User\Providers;
 
-use Illuminate\Events\Dispatcher;
+use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
-use Modules\User\Domain\Repositories\UserRepositoryInterface;
-use Modules\User\Infrastructure\Repositories\EloquentUserRepository;
+use Modules\Core\Infrastructure\User\Repositories\EloquentUserRepository;
+use Modules\Core\Domain\User\Repositories\UserRepositoryInterface;
 use JeroenNoten\LaravelAdminLte\Events\BuildingMenu;
+
 
 class UserServiceProvider extends ServiceProvider
 {
     public function register()
     {
         $this->app->bind(UserRepositoryInterface::class, EloquentUserRepository::class);
-        $this->mergeConfigFrom(__DIR__.'/../Config/config.php', 'user_module');
+        $this->mergeConfigFrom(__DIR__ . '/../Config/config.php', 'user_module');
     }
     public function boot(Dispatcher $events)
     {

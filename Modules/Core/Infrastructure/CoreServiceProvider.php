@@ -2,52 +2,28 @@
 
 namespace Modules\Core\Infrastructure;
 
-use Illuminate\Contracts\Events\Dispatcher;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
-use JeroenNoten\LaravelAdminLte\Events\BuildingMenu;
-use Modules\User\Domain\Repositories\UserRepositoryInterface;
-use Modules\User\Infrastructure\Repositories\EloquentUserRepository;
+use Modules\Core\Infrastructure\User\Providers\UserServiceProvider;
+use Modules\Core\Infrastructure\Account\Providers\AccountServiceProvider;
 
 class CoreServiceProvider extends ServiceProvider
 {
+    /**
+     * Registra os Service Providers dos submódulos.
+     */
     public function register()
     {
-        $this->app->bind(UserRepositoryInterface::class, EloquentUserRepository::class);
+        // O Core apenas registra os provedores especializados
+        $this->app->register(AccountServiceProvider::class);
+        $this->app->register(UserServiceProvider::class);
     }
 
-    public function boot(Dispatcher $events)
+    /**
+     * Lógica global de inicialização (se houver).
+     */
+    public function boot()
     {
-        $this->loadViewsFrom(__DIR__ . '/Account/Views', 'account');
-
-        $this->registerRoutes();
-
-        $this->configureMenu($events);
-    }
-
-    protected function registerRoutes()
-    {
-        $path = __DIR__ . '/Account/Routes/web.php';
-
-        if (file_exists($path)) {
-            Route::middleware('web')
-                ->prefix('admin')
-                ->group($path);
-        }
-    }
-
-    protected function configureMenu(Dispatcher $events)
-    {
-        $events->listen(BuildingMenu::class, function (BuildingMenu $event) {
-            if (auth()->check() && (auth()->user()->hasRole('admin') || auth()->user()->hasRole('funcionario'))) {
-
-                $event->menu->add([
-                    'text' => 'Meu perfil',
-                    'icon' => 'fas fa-fw fa-user',
-                    'route' => 'account.index',
-                    'active' => ['admin/account*'],
-                ]);
-            }
-        });
+        // Atualmente vazio, pois cada submódulo cuida de suas próprias 
+        // rotas, views e menus através de seus respectivos Providers.
     }
 }

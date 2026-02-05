@@ -1,11 +1,11 @@
 <?php
 
-namespace Modules\User\Application\UseCases;
+namespace Modules\Core\Application\User\UseCases;
 
 use Illuminate\Support\Facades\Hash;
-use Modules\User\Application\DTOs\UserUpdateDTO;
-use Modules\User\Domain\Entities\User;
-use Modules\User\Domain\Repositories\UserRepositoryInterface;
+use Modules\Core\Application\User\DTOs\UserUpdateDTO;
+use Modules\Core\Domain\User\Entities\User;
+use Modules\Core\Domain\User\Repositories\UserRepositoryInterface;
 
 class UpdateUser
 {

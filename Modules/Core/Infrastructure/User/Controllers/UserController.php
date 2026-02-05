@@ -1,17 +1,16 @@
 <?php
-
-namespace Modules\User\Infrastructure\Controllers;
+namespace Modules\Core\Infrastructure\User\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Modules\User\Application\DTOs\UserCreateDTO;
-use Modules\User\Application\DTOs\UserUpdateDTO;
-use Modules\User\Application\UseCases\DeleteUser;
-use Modules\User\Application\UseCases\GetAllUsers;
-use Modules\User\Application\UseCases\GetUser;
-use Modules\User\Application\UseCases\RegisterUser;
-use Modules\User\Application\UseCases\ResetPasswordUser;
-use Modules\User\Application\UseCases\UpdateUser;
+use Modules\Core\Application\User\DTOs\UserCreateDTO;
+use Modules\Core\Application\User\DTOs\UserUpdateDTO;
+use Modules\Core\Application\User\UseCases\DeleteUser;
+use Modules\Core\Application\User\UseCases\GetAllUsers;
+use Modules\Core\Application\User\UseCases\GetUser;
+use Modules\Core\Application\User\UseCases\RegisterUser;
+use Modules\Core\Application\User\UseCases\ResetPasswordUser;
+use Modules\Core\Application\User\UseCases\UpdateUser;
 use Spatie\Permission\Models\Role;
 
 class UserController extends Controller

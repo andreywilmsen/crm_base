@@ -1,8 +1,8 @@
 <?php
 
-namespace Modules\User\Application\UseCases;
+namespace Modules\Core\Application\User\UseCases;
 
-use Modules\User\Domain\Repositories\UserRepositoryInterface;
+use Modules\Core\Domain\User\Repositories\UserRepositoryInterface;
 
 class GetAllUsers
 {

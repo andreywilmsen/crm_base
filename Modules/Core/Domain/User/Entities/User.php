@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\User\Domain\Entities;
+namespace Modules\Core\Domain\User\Entities;
 
 use DateTime;
 use InvalidArgumentException;

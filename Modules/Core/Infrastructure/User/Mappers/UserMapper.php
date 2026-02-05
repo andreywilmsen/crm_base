@@ -1,8 +1,9 @@
 <?php
 
-namespace Modules\User\Infrastructure\Mappers;
+namespace Modules\Core\Infrastructure\User\Mappers;
 
-use Modules\User\Domain\Entities\User as UserEntity;
+use Modules\Core\Domain\User\Entities\User as UserEntity;
+
 use App\Models\User as UserModel;
 use DateTime;
 

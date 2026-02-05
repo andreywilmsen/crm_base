@@ -1,13 +1,13 @@
 <?php
 
-namespace Modules\User\Infrastructure\Repositories;
+namespace Modules\Core\Infrastructure\User\Repositories;
 
-use Modules\User\Domain\Entities\User;
-use Modules\User\Infrastructure\Mappers\UserMapper;
-use Modules\User\Domain\Repositories\UserRepositoryInterface;
 use App\Models\User as UserModel;
 use Illuminate\Support\Facades\DB;
 use InvalidArgumentException;
+use Modules\Core\Domain\User\Entities\User;
+use Modules\Core\Domain\User\Repositories\UserRepositoryInterface;
+use Modules\Core\Infrastructure\User\Mappers\UserMapper;
 
 class EloquentUserRepository implements UserRepositoryInterface
 {

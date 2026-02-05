@@ -4,8 +4,8 @@ namespace Modules\Core\Application\Account\UseCases;
 
 use Illuminate\Support\Facades\Hash;
 use Modules\Core\Application\Account\DTOs\ProfileUpdateDTO;
-use Modules\User\Domain\Entities\User;
-use Modules\User\Domain\Repositories\UserRepositoryInterface;
+use Modules\Core\Domain\User\Entities\User;
+use Modules\Core\Domain\User\Repositories\UserRepositoryInterface;
 
 class UpdateUser
 {

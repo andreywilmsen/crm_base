@@ -1,11 +1,11 @@
 <?php
 
-namespace Modules\User\Application\UseCases;
+namespace Modules\Core\Application\User\UseCases;
 
 use Illuminate\Support\Facades\Hash;
-use Modules\User\Application\DTOs\UserCreateDTO;
-use Modules\User\Domain\Entities\User;
-use Modules\User\Domain\Repositories\UserRepositoryInterface;
+use Modules\Core\Application\User\DTOs\UserCreateDTO;
+use Modules\Core\Domain\User\Entities\User;
+use Modules\Core\Domain\User\Repositories\UserRepositoryInterface;
 
 class RegisterUser
 {

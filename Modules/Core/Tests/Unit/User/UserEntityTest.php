@@ -92,12 +92,13 @@ class UserEntityTest extends TestCase
     }
 
     #[Test]
-    public function it_should_block_create_with_empty_password(){
+    public function it_should_block_create_with_empty_password()
+    {
         $this->expectException(\InvalidArgumentException::class);
-        
+
         $this->expectExceptionMessage('A senha é obrigatória.');
 
-         new User(
+        new User(
             id: 1,
             name: 'José Carlos Alexandre',
             email: 'jose@admin.com',
@@ -106,5 +107,56 @@ class UserEntityTest extends TestCase
             rememberToken: null,
             role: 'admin'
         );
+    }
+
+    #[Test]
+    public function it_should_block_create_with_short_password()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage("A senha deverá ter no mínimo 8 caracteres.");
+
+        new User(
+            id: 1,
+            name: 'José Carlos Alexandre',
+            email: 'jose@admin.com',
+            emailVerifiedAt: new \DateTime(),
+            password: 'abcde',
+            rememberToken: null,
+            role: 'admin'
+        );
+    }
+
+    #[Test]
+    public function it_should_block_create_with_invalid_role_permission()
+    {
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage("A permissão é obrigatória.");
+
+        new User(
+            id: 1,
+            name: 'José Carlos Alexandre',
+            email: 'jose@admin.com',
+            emailVerifiedAt: new \DateTime(),
+            password: '12345678',
+            rememberToken: null,
+            role: ''
+        );
+    }
+
+    #[Test]
+    public function it_should_sanitize_name_removing_extra_spaces()
+    {
+        $user = new User(
+            id: 1,
+            name: '  José    Carlos  ',
+            email: 'jose@email.com',
+            emailVerifiedAt: null,
+            password: 'password123',
+            rememberToken: null,
+            role: 'admin'
+        );
+
+        $this->assertEquals('José Carlos', $user->getName());
     }
 }

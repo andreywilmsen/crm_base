@@ -19,7 +19,6 @@ class User
         private ?string $role = null
     ) {
         $this->validate();
-        $this->role = $role;
     }
 
 
@@ -80,6 +79,14 @@ class User
 
         if (empty($this->password)) {
             throw new InvalidArgumentException('A senha é obrigatória.');
+        }
+
+        if(strlen($this->password) < 8){
+            throw new InvalidArgumentException('A senha deverá ter no mínimo 8 caracteres.');
+        }
+
+        if(empty($this->role)){
+            throw new InvalidArgumentException('A permissão é obrigatória.');
         }
     }
 

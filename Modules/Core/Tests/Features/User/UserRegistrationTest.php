@@ -55,7 +55,7 @@ class UserRegistrationTest extends TestCase
         $response = $this->post(route('user.store'), $user);
 
         $response->assertStatus(302);
-        $response->assertSessionHasErrors(['error']);
+        $response->assertSessionHasErrors(['name']);
     }
 
     #[Test]
@@ -97,7 +97,7 @@ class UserRegistrationTest extends TestCase
         $response = $this->post(route('user.store'), $user);
 
         $response->assertStatus(302);
-        $response->assertSessionHasErrors(['error']);
+        $response->assertSessionHasErrors(['name']);
 
         $this->assertDatabaseMissing('users', [
             'email' => 'andrey@email.com.br'
@@ -121,7 +121,7 @@ class UserRegistrationTest extends TestCase
         $response = $this->post(route('user.store'), $user);
 
         $response->assertStatus(302);
-        $response->assertSessionHasErrors(['error']);
+        $response->assertSessionHasErrors(['email']);
 
         $this->assertDatabaseMissing('users', [
             'email' => 'andrey@email.com.br'
@@ -147,8 +147,7 @@ class UserRegistrationTest extends TestCase
         $response = $this->post(route('user.store'), $user);
 
         $response->assertStatus(302);
-        $response->assertSessionHasErrors(['error']);
-
+        $response->assertSessionHasErrors(['email']);
         $this->assertCount(1, UserModel::where('email', $emailExistente)->get());
     }
 
@@ -169,8 +168,7 @@ class UserRegistrationTest extends TestCase
         $response = $this->post(route('user.store'), $user);
 
         $response->assertStatus(302);
-        $response->assertSessionHasErrors(['error']);
-
+        $response->assertSessionHasErrors(['password']);
         $this->assertDatabaseMissing('users', ['email' => 'andrey@email.com']);
     }
 
@@ -191,8 +189,7 @@ class UserRegistrationTest extends TestCase
         $response = $this->post(route('user.store'), $user);
 
         $response->assertStatus(302);
-        $response->assertSessionHasErrors(['error']);
-
+        $response->assertSessionHasErrors(['password']);
         $this->assertDatabaseMissing('users', ['email' => 'andrey@teste.com']);
     }
 }

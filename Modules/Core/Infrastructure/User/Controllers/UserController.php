@@ -56,7 +56,7 @@ class UserController extends Controller
     public function store(RegisterUser $registerUseCase, Request $request)
     {
         try {
-            $request->validate(['name' => 'required|string|max:255', 'email' => 'required|email|unique:users,email', 'password' => 'required|confirmed|min:8', 'role' => 'required']);
+            $request->validate(['name' => 'required|string|min:3|max:255', 'email' => 'required|email|unique:users,email', 'password' => 'required|confirmed|min:8', 'role' => 'required']);
 
             $dto = UserCreateDTO::fromRequest($request);
             $user = $registerUseCase->execute($dto);
@@ -64,6 +64,8 @@ class UserController extends Controller
             return redirect()
                 ->route('user.index')
                 ->with('success', 'Usuário cadastrado com sucesso!');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            throw $e;
         } catch (\Exception $e) {
             return back()->withErrors(['error' => $e->getMessage()])->withInput();
         }
@@ -73,6 +75,8 @@ class UserController extends Controller
     public function update(int $id, UpdateUser $updateUseCase, Request $request)
     {
         try {
+            $request->validate(['name' => 'required|string|min:3|max:255', 'email' => 'required|email|unique:users,email,' . $id, 'password' => 'required|confirmed|min:8', 'role' => 'required']);
+
             $dto = UserUpdateDTO::fromRequest($request, $id);
             $user = $updateUseCase->execute($dto);
 
@@ -88,6 +92,8 @@ class UserController extends Controller
             return redirect()
                 ->route('user.index')
                 ->with('success', 'Usuário atualizado com sucesso!');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            throw $e;
         } catch (\InvalidArgumentException $e) {
             return response()->json(['error' => $e->getMessage()], 400);
         } catch (\Exception $e) {

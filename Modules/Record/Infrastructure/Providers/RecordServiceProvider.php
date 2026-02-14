@@ -6,21 +6,22 @@ use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use JeroenNoten\LaravelAdminLte\Events\BuildingMenu;
-use Modules\Record\Domain\Repositories\RecordRepositorieInterface;
-use Modules\Record\Infrastructure\Repositories\EloquentRecordRepositories;
+use Modules\Record\Domain\Repositories\RecordRepositoryInterface;
+use Modules\Record\Infrastructure\Repositories\EloquentRecordRepository;
 
 class RecordServiceProvider extends ServiceProvider
 {
     public function register()
     {
-        $this->app->bind(RecordRepositorieInterface::class, EloquentRecordRepositories::class);
+        $this->app->bind(RecordRepositoryInterface::class, EloquentRecordRepository::class);
     }
     public function boot(Dispatcher $events)
     {
         $this->loadViewsFrom(__DIR__ . '/../Views', 'record');
+        $this->loadMigrationsFrom(__DIR__ . '/../../Database/Migrations');
         $this->registerRoutes();
         $events->listen(BuildingMenu::class, function (BuildingMenu $event) {
-            if (auth()->check() && auth()->user()->hasRole('admin')) {
+            if (auth()->check() && (auth()->user()->hasRole('admin') || auth()->user()->hasRole('funcionario'))) {
                 $event->menu->add([
                     'text' => 'Registros',
                     'icon' => 'fas fa-fw fa-file',

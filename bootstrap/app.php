@@ -12,8 +12,10 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->validateCsrfTokens(except: [
-            'admin/user',   // Isenta a rota principal
-            'admin/user/*', // Isenta sub-rotas (show, update, delete)
+            'admin/user',
+            'admin/user/*',
+            'admin/record',
+            'admin/record/*'
         ]);
         $middleware->alias([
             'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,

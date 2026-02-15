@@ -11,6 +11,7 @@ use Modules\Record\Application\UseCases\GetAllRecords;
 use Modules\Record\Application\UseCases\GetRecord;
 use Modules\Record\Application\UseCases\UpdateRecord;
 use Modules\Record\Infrastructure\Requests\StoreRecordRequest;
+use Modules\Record\Infrastructure\Requests\UpdateRecordRequest;
 
 class RecordController extends Controller
 {
@@ -66,7 +67,7 @@ class RecordController extends Controller
         }
     }
 
-    public function update(int $id, UpdateRecord $updateUseCase, StoreRecordRequest $request)
+    public function update(int $id, UpdateRecord $updateUseCase, UpdateRecordRequest $request)
     {
         try {
             $dto = RecordUpdateDTO::fromRequest($request, $id);

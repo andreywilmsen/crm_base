@@ -33,7 +33,7 @@ class EloquentRecordRepository implements RecordRepositoryInterface
 
     public function findById(int $id): ?Record
     {
-        $record = $this->recordModel->find($id);
+        $record = $this->recordModel->with('user')->find($id);
 
         if (!$record) {
             return null;

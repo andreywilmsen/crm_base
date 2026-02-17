@@ -106,6 +106,14 @@
                     @enderror
                 </div>
 
+                @if(isset($record))
+                    <div class="form-group">
+                        <label for="responsible">Última atualização</label>
+                        <input type="text" class="form-control" disabled 
+                            value="{{ $record['username'] }}">
+                    </div>
+                @endif
+
                 {{-- Campo Oculto para o User ID (Associa ao usuário logado se for novo) --}}
                 @if (!isset($record))
                     <input type="hidden" name="user_id" value="{{ auth()->id() }}">

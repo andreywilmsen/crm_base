@@ -13,7 +13,8 @@ class Record
         private readonly string $description,
         private readonly string $status,
         private readonly int $userId,
-        private ?int $id = null
+        private ?int $id = null,
+        private ?string $username = null
     ) {
         $this->validate();
     }
@@ -51,6 +52,11 @@ class Record
     public function getUserId()
     {
         return $this->userId;
+    }
+
+    public function getUsername()
+    {
+        return $this->username;
     }
 
 
@@ -95,6 +101,7 @@ class Record
             'description'    => $this->description,
             'status'         => $this->status,
             'user_id'        => $this->userId,
+            'username'      => $this->username,
         ];
     }
 }

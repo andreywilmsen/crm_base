@@ -12,7 +12,8 @@ class RecordUpdateDTO
         public readonly string $referenceDate,
         public readonly ?float $value,
         public readonly string $description,
-        public readonly string $status
+        public readonly string $status,
+        public readonly int $userId
     ) {}
 
     public static function fromRequest(Request $request, int $id): self
@@ -23,7 +24,8 @@ class RecordUpdateDTO
             referenceDate: $request->reference_date,
             value: $request->value ?? null,
             description: $request->description ?? '',
-            status: $request->status
+            status: $request->status,
+            userId: (int) auth()->id(),
         );
     }
 }

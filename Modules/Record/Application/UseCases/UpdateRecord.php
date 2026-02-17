@@ -25,7 +25,7 @@ class UpdateRecord
             value: $dto->value,
             description: $dto->description,
             status: $dto->status,
-            userId: $existingRecord->getUserId(),
+            userId: $dto->userId,
             id: $dto->id
         );
         return $this->recordRepository->save($updatedRecord);

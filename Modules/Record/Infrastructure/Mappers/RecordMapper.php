@@ -16,6 +16,7 @@ class RecordMapper
             'description'    => $record->getDescription(),
             'status'         => $record->getStatus(),
             'user_id'        => $record->getUserId(),
+            'username'       => $record->getUsername(),
         ];
 
         if ($record->getId()) {
@@ -34,7 +35,8 @@ class RecordMapper
             value: (float) $model->value,
             description: $model->description,
             status: $model->status,
-            userId: $model->user_id
+            userId: $model->user_id,
+            username: $model->user?->name
         );
     }
 
@@ -48,6 +50,7 @@ class RecordMapper
             'description'    => $record->getDescription(),
             'status'         => $record->getStatus(),
             'user_id'        => $record->getUserId(),
+            'username'       => $record->getUsername()
         ];
     }
 }

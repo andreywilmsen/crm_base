@@ -10,7 +10,7 @@ class RecordUpdateDTO
         public readonly int $id,
         public readonly string $title,
         public readonly string $referenceDate,
-        public readonly float $value,
+        public readonly ?float $value,
         public readonly string $description,
         public readonly string $status
     ) {}
@@ -21,7 +21,7 @@ class RecordUpdateDTO
             id: $id,
             title: $request->title,
             referenceDate: $request->reference_date,
-            value: (float) $request->value,
+            value: $request->value ?? null,
             description: $request->description ?? '',
             status: $request->status
         );

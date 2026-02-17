@@ -9,7 +9,7 @@ readonly class RecordCreateDTO
     public function __construct(
         public string $title,
         public string $referenceDate,
-        public float $value,
+        public ?float $value,
         public string $description,
         public string $status,
         public int $userId,
@@ -20,7 +20,7 @@ readonly class RecordCreateDTO
         return new self(
             title: $request->input('title'),
             referenceDate: $request->input('reference_date'),
-            value: (float) $request->input('value'),
+            value: $request->input('value') ?? null,
             description: $request->input('description'),
             status: $request->input('status'),
             userId: (int) $request->user()?->id ?? $request->input('user_id'),

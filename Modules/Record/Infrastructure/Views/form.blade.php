@@ -51,7 +51,7 @@
                             <label for="value">Valor (R$)</label>
                             <input type="number" step="0.01" name="value"
                                 class="form-control @error('value') is-invalid @enderror" id="value"
-                                value="{{ old('value', $record['value'] ?? '') }}" placeholder="0,00" required>
+                                value="{{ old('value', $record['value'] ?? '') }}" placeholder="0,00">
                             @error('value')
                                 <span class="invalid-feedback">{{ $message }}</span>
                             @enderror
@@ -66,8 +66,8 @@
                             <label for="reference_date">Data de Referência</label>
                             <input type="date" name="reference_date"
                                 class="form-control @error('reference_date') is-invalid @enderror" id="reference_date"
-                                value="{{ old('reference_date', $record['reference_date'] ?? date('Y-m-d')) }}" required>
-                            @error('reference_date')
+                                value="{{ old('reference_date', isset($record['reference_date']) ? \Carbon\Carbon::parse($record['reference_date'])->format('Y-m-d') : date('Y-m-d')) }}">
+                                @error('reference_date')
                                 <span class="invalid-feedback">{{ $message }}</span>
                             @enderror
                         </div>

@@ -39,8 +39,7 @@
                             <td>{{ $record['id'] }}</td>
                             <td>{{ $record['title'] }}</td>
                             <td>{{ \Carbon\Carbon::parse($record['reference_date'])->format('d/m/Y') }}</td>
-                            <td>R$ {{ number_format($record['value'], 2, ',', '.') }}</td>
-                            <td>
+                            <td>{{ $record['value'] ? 'R$ ' . number_format($record['value'], 2, ',', '.') : '---' }}</td>                            <td>
                                 <span
                                     class="badge badge-{{ $record['status'] == 'completed' ? 'success' : ($record['status'] == 'pending' ? 'warning' : 'danger') }}">
                                     {{ ucfirst($record['status']) }}

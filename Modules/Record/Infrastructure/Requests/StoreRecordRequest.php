@@ -16,7 +16,7 @@ class StoreRecordRequest extends FormRequest
         return [
             'title'          => 'required|string|min:3|max:255',
             'reference_date' => 'required|date',
-            'value'          => 'numeric|min:0',
+            'value'          => 'nullable|numeric|min:0',
             'description'    => 'required|string|max:1000',
             'status'         => 'required|string',
             'user_id'        => 'required|exists:users,id'
@@ -32,10 +32,9 @@ class StoreRecordRequest extends FormRequest
             'title.max'               => 'O título não pode ultrapassar :max caracteres.',
             'reference_date.required' => 'A data de referência é obrigatória.',
             'reference_date.date'     => 'Informe uma data válida.',
-            'value.required'          => 'O valor é obrigatório.',
             'value.numeric'           => 'O valor deve ser um número.',
             'value.min'               => 'Valores negativos não são permitidos.',
-            'value.required'          => 'A descrição é obrigatória.',
+            'description.required'    => 'A descrição é obrigatória.',
             'description.string'      => 'A descrição deve ser um texto.',
             'description.max'         => 'A descrição não pode ultrapassar :max caracteres.',
             'status.required'         => 'O campo status é obrigatório.',

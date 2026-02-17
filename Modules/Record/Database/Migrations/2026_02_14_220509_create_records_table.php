@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->date('reference_date');
-            $table->decimal('value', 15, 2);
+            $table->decimal('value', 15, 2)->nullable();
             $table->text('description');
             $table->string('status');
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');

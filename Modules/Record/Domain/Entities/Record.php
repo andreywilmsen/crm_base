@@ -9,7 +9,7 @@ class Record
     public function __construct(
         private readonly string $title,
         private readonly string $referenceDate,
-        private readonly float $value,
+        private readonly ?float $value = null,
         private readonly string $description,
         private readonly string $status,
         private readonly int $userId,
@@ -70,7 +70,7 @@ class Record
             throw new InvalidArgumentException('Campo descrição é obrigatório.');
         }
 
-        if ($this->value < 0) {
+        if ($this->value !== null && $this->value < 0) {
             throw new InvalidArgumentException('Valores negativos não são permitidos.');
         }
 

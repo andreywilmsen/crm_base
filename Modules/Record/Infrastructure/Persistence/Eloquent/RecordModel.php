@@ -4,6 +4,7 @@ namespace Modules\Record\Infrastructure\Persistence\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Modules\Record\Infrastructure\Database\Factories\RecordModelFactory;
 
 class RecordModel extends Model
 {
@@ -25,6 +26,11 @@ class RecordModel extends Model
         'user_id' => 'integer',
         'reference_date' => 'date:Y-m-d',
     ];
+
+    protected static function newFactory()
+    {
+        return RecordModelFactory::new();
+    }
 
     public function user()
     {

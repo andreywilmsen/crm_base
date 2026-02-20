@@ -19,7 +19,6 @@ class UpdateRecordRequest extends FormRequest
             'value'          => 'nullable|numeric|min:0',
             'description'    => 'required|string|max:1000',
             'status'         => 'required|string',
-            'user_id'        => 'required|in:' . auth()->id()
         ];
     }
 
@@ -39,8 +38,6 @@ class UpdateRecordRequest extends FormRequest
             'description.max'         => 'A descrição não pode ultrapassar :max caracteres.',
             'status.required'         => 'O campo status é obrigatório.',
             'status.string'           => 'O status informado é inválido.',
-            'user_id.required'        => 'O responsável pelo registro é obrigatório.',
-            'user_id.in'              => 'Você não tem permissão para criar um registro para outro usuário.',
         ];
     }
 }

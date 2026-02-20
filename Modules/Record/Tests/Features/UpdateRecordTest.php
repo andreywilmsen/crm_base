@@ -159,29 +159,6 @@ class UpdateRecordTest extends TestCase
     }
 
     #[Test]
-    public function it_should_block_update_with_empty_userId()
-    {
-        $this->loginAsFuncionario();
-
-        $recordToUpdate = RecordModel::factory()->create([
-            'title' => 'Venda de título'
-        ]);
-
-        $data = [
-            'title'          => 'Venda de Consultoria',
-            'reference_date' => '2026-02-14',
-            'value'          => 2500.00,
-            'description'    => 'Serviço prestado para a empresa X.',
-            'status'         => 'completed',
-            'user_id'        => '',
-        ];
-
-        $response = $this->put(route('record.update', $recordToUpdate->id), $data);
-        $response->assertStatus(302);
-        $response->assertSessionHasErrors(['user_id']);
-    }
-
-    #[Test]
     public function it_should_block_update_with_invalid_date()
     {
         $user = $this->loginAsAdmin();
@@ -228,26 +205,25 @@ class UpdateRecordTest extends TestCase
     }
 
     #[Test]
-    public function it_should_block_update_with_invalid_userId()
+    public function it_should_always_assign_the_logged_user_as_the_record_owner()
     {
-        $user = $this->loginAsAdmin();
-
-        $recordToUpdate = RecordModel::factory()->create([
-            'title' => 'Venda de título'
-        ]);
+        $user = $this->loginAsFuncionario();
+        $record = RecordModel::factory()->create();
 
         $data = [
-            'title'          => 'Venda de Consultoria',
-            'reference_date' => '2026-02-14',
-            'value'          => 2500.00,
-            'description'    => 'Serviço prestado para a empresa X.',
-            'status'         => 'completed',
-            'user_id'        => \App\Models\User::max('id') + 1,
+            'title' => 'Titulo Alterado',
+            'reference_date' => now()->format('Y-m-d'),
+            'description' => 'Desc',
+            'status' => 'active',
+            'user_id' => 999
         ];
 
-        $response = $this->put(route('record.update', $recordToUpdate->id), $data);
-        $response->assertStatus(302);
-        $response->assertSessionHasErrors(['user_id']);
+        $this->put(route('record.update', $record->id), $data);
+
+        $this->assertDatabaseHas('records', [
+            'id' => $record->id,
+            'user_id' => $user->id
+        ]);
     }
 
     #[Test]

@@ -39,7 +39,7 @@ class DeleteRecordTest extends TestCase
     }
 
     #[Test]
-    public function it_should_return_404_when_deleting_non_existent_record()
+    public function it_should_return_302_when_deleting_non_existent_record()
     {
         $this->loginAsFuncionario();
 

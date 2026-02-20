@@ -11,7 +11,7 @@ readonly class RecordCreateDTO
         public string $referenceDate,
         public ?float $value,
         public string $description,
-        public string $status,
+        public int $statusId,
         public int $categoryId,
         public int $userId,
     ) {}
@@ -23,7 +23,7 @@ readonly class RecordCreateDTO
             referenceDate: $request->input('reference_date'),
             value: $request->input('value') ?? null,
             description: $request->input('description'),
-            status: $request->input('status'),
+            statusId: (int) $request->input('status_id'),
             categoryId: $request->input('category_id'),
             userId: (int) $request->user()?->id ?? $request->input('user_id'),
         );
@@ -36,7 +36,7 @@ readonly class RecordCreateDTO
             'reference_date' => $this->referenceDate,
             'value'          => $this->value,
             'description'    => $this->description,
-            'status'         => $this->status,
+            'status_id'      => $this->statusId,
             'category_id'    => $this->categoryId,
             'user_id'        => $this->userId,
         ];

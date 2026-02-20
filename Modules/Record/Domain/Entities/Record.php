@@ -11,12 +11,13 @@ class Record
         private readonly string $referenceDate,
         private readonly ?float $value = null,
         private readonly string $description,
-        private readonly string $status,
+        private readonly int $statusId,
         private readonly int $userId,
         private readonly int $categoryId,
         private ?string $categoryName = null,
         private ?int $id = null,
-        private ?string $username = null
+        private ?string $username = null,
+        private ?string $statusName = null,
     ) {
         $this->validate();
     }
@@ -46,9 +47,14 @@ class Record
         return $this->description;
     }
 
-    public function getStatus()
+    public function getStatusId()
     {
-        return $this->status;
+        return $this->statusId;
+    }
+
+    public function getStatusName()
+    {
+        return $this->statusName;
     }
 
     public function getUserId()
@@ -92,8 +98,8 @@ class Record
             throw new InvalidArgumentException('Valores negativos não são permitidos.');
         }
 
-        if (empty($this->status)) {
-            throw new InvalidArgumentException('Campo status é obrigatório.');
+        if ($this->statusId === null || $this->statusId <= 0) {
+            throw new InvalidArgumentException('O campo status é obrigatório.');
         }
 
         if (empty($this->categoryId)) {
@@ -115,7 +121,7 @@ class Record
             'reference_date' => $this->referenceDate,
             'value'          => $this->value,
             'description'    => $this->description,
-            'status'         => $this->status,
+            'status_id'      => $this->statusId,
             'category_id'    => $this->categoryId,
             'user_id'        => $this->userId,
             'username'       => $this->username,

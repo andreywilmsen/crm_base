@@ -9,9 +9,14 @@
 @section('content')
     <div class="card">
         <div class="card-header">
-            <a href="{{ route('record.create') }}" class="btn btn-primary">Novo Registro</a>
+            <a href="{{ route('record.create') }}" class="btn btn-primary shadow-sm">
+                <i class="fas fa-plus-circle"></i> Novo Registro
+            </a>
             <a href="{{ route('record-category.index') }}" class="btn btn-secondary shadow-sm">
                 <i class="fas fa-tags"></i> Gerenciar Categorias
+            </a>
+            <a href="{{ route('record-status.index') }}" class="btn btn-info shadow-sm">
+                <i class="fas fa-stream"></i> Gerenciar Status
             </a>
         </div>
         <div class="card-body">
@@ -50,9 +55,8 @@
                             <td>{{ \Carbon\Carbon::parse($record['reference_date'])->format('d/m/Y') }}</td>
                             <td>{{ $record['value'] ? 'R$ ' . number_format($record['value'], 2, ',', '.') : '---' }}</td>
                             <td>
-                                <span
-                                    class="badge badge-{{ $record['status'] == 'completed' ? 'success' : ($record['status'] == 'pending' ? 'warning' : 'danger') }}">
-                                    {{ ucfirst($record['status']) }}
+                                <span class="badge badge-outline-secondary">
+                                    {{ $record['status_name'] ?? 'Sem Status' }}
                                 </span>
                             </td>
                             <td>

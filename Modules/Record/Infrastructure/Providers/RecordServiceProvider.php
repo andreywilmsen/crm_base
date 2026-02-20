@@ -8,8 +8,10 @@ use Illuminate\Support\ServiceProvider;
 use JeroenNoten\LaravelAdminLte\Events\BuildingMenu;
 use Modules\Record\Domain\Repositories\RecordCategoryRepositoryInterface;
 use Modules\Record\Domain\Repositories\RecordRepositoryInterface;
+use Modules\Record\Domain\Repositories\RecordStatusRepositoryInterface;
 use Modules\Record\Infrastructure\Repositories\EloquentRecordCategoryRepository;
 use Modules\Record\Infrastructure\Repositories\EloquentRecordRepository;
+use Modules\Record\Infrastructure\Repositories\EloquentRecordStatusRepository;
 
 class RecordServiceProvider extends ServiceProvider
 {
@@ -17,7 +19,9 @@ class RecordServiceProvider extends ServiceProvider
     {
         $this->app->bind(RecordRepositoryInterface::class, EloquentRecordRepository::class);
         $this->app->bind(RecordCategoryRepositoryInterface::class, EloquentRecordCategoryRepository::class);
+        $this->app->bind(RecordStatusRepositoryInterface::class, EloquentRecordStatusRepository::class);
     }
+    
     public function boot(Dispatcher $events)
     {
         $this->loadViewsFrom(__DIR__ . '/../Views', 'record');

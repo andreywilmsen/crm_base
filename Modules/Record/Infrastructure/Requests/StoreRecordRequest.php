@@ -18,9 +18,9 @@ class StoreRecordRequest extends FormRequest
             'reference_date' => 'required|date',
             'value'          => 'nullable|numeric|min:0',
             'description'    => 'required|string|max:1000',
-            'status'         => 'required|string',
+            'status_id'      => 'required|integer',
             'user_id'        => 'required|in:' . auth()->id(),
-            'category_id'    => 'required'
+            'category_id'    => 'required|integer'
         ];
     }
 
@@ -38,11 +38,12 @@ class StoreRecordRequest extends FormRequest
             'description.required'    => 'A descrição é obrigatória.',
             'description.string'      => 'A descrição deve ser um texto.',
             'description.max'         => 'A descrição não pode ultrapassar :max caracteres.',
-            'status.required'         => 'O campo status é obrigatório.',
-            'status.string'           => 'O status informado é inválido.',
+            'status_id.required'      => 'O campo status é obrigatório.',
+            'status_id.integer'       => 'O status informado é inválido.',
             'user_id.required'        => 'O responsável pelo registro é obrigatório.',
             'user_id.in'              => 'Você não tem permissão para criar um registro para outro usuário.',
             'category_id.required'    => 'O campo categoria é obrigatório.',
+            'category_id.integer'     => 'A categoria informada é inválida.',
         ];
     }
 }

@@ -14,7 +14,7 @@ return new class extends Migration
             $table->date('reference_date');
             $table->decimal('value', 15, 2)->nullable();
             $table->text('description');
-            $table->string('status');
+            $table->foreignId('status_id')->constrained('records_status')->onDelete('restrict');
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('category_id')->constrained('records_categories')->onDelete('restrict');
             $table->timestamps();

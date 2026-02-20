@@ -24,7 +24,7 @@ class UpdateRecord
             referenceDate: $dto->referenceDate,
             value: $dto->value,
             description: $dto->description,
-            status: $dto->status,
+            statusId: $dto->statusId,
             userId: $dto->userId,
             categoryId: $dto->categoryId,
             id: $dto instanceof RecordUpdateDTO ? $dto->id : null

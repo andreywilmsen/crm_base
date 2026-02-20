@@ -9,10 +9,12 @@
 @section('content')
     <div class="card">
         <div class="card-header">
-            <a href="{{ route('user.create') }}" class="btn btn-primary">Novo Usuário</a>
+            <a href="{{ route('user.create') }}" class="btn btn-primary">
+                <i class="fas fa-plus-circle"></i> Novo Registro
+            </a>
         </div>
         <div class="card-body">
-            @if(session('success'))
+            @if (session('success'))
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
                     <i class="icon fas fa-check"></i>
                     {{ session('success') }}
@@ -31,17 +33,18 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($users as $user)
+                    @foreach ($users as $user)
                         <tr>
                             <td>{{ $user['id'] }}</td>
                             <td>{{ $user['name'] }}</td>
                             <td>{{ $user['email'] }}</td>
                             <td>
-                                    <a href="{{ route('user.show', $user['id']) }}" class="btn btn-sm btn-info">Editar</a>                             
-                                    <form action="{{ route('user.destroy', $user['id']) }}" method="POST" style="display:inline">
+                                <a href="{{ route('user.show', $user['id']) }}" class="btn btn-sm btn-info">Editar</a>
+                                <form action="{{ route('user.destroy', $user['id']) }}" method="POST"
+                                    style="display:inline">
                                     @csrf
                                     @method('DELETE')
-                                        <button type="button" class="btn btn-sm btn-danger btn-delete">Excluir</button>
+                                    <button type="button" class="btn btn-sm btn-danger btn-delete">Excluir</button>
                                 </form>
                             </td>
                         </tr>
@@ -58,7 +61,7 @@
         $('.btn-delete').on('click', function(e) {
             e.preventDefault();
             let form = $(this).closest('form');
-            
+
             Swal.fire({
                 title: 'Tem certeza?',
                 text: "Você não poderá reverter esta ação!",

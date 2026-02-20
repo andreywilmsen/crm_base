@@ -17,7 +17,7 @@ class RecordModel extends Model
         'reference_date',
         'value',
         'description',
-        'status',
+        'status_id',
         'category_id',
         'user_id',
     ];
@@ -41,5 +41,10 @@ class RecordModel extends Model
     public function category()
     {
         return $this->belongsTo(RecordCategoryModel::class, 'category_id');
+    }
+
+    public function status()
+    {
+        return $this->belongsTo(RecordStatusModel::class, 'status_id');
     }
 }

@@ -12,12 +12,13 @@ class RegisterRecord
 
     public function execute(RecordCreateDTO $dto): Record
     {
+
         $record = new Record(
             title: $dto->title,
             referenceDate: $dto->referenceDate,
             value: $dto->value,
             description: $dto->description,
-            status: $dto->status,
+            statusId: $dto->statusId,
             userId: $dto->userId,
             categoryId: $dto->categoryId,
             id: null

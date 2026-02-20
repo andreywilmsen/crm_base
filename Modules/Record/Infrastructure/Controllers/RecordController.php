@@ -11,6 +11,7 @@ use Modules\Record\Application\UseCases\Record\GetRecord;
 use Modules\Record\Application\UseCases\Record\RegisterRecord;
 use Modules\Record\Application\UseCases\Record\UpdateRecord;
 use Modules\Record\Application\UseCases\RecordCategory\GetAllRecordsCategories;
+use Modules\Record\Application\UseCases\RecordStatus\GetAllRecordsStatus;
 use Modules\Record\Infrastructure\Mappers\RecordMapper;
 use Modules\Record\Infrastructure\Requests\StoreRecordRequest;
 use Modules\Record\Infrastructure\Requests\UpdateRecordRequest;
@@ -30,22 +31,28 @@ class RecordController extends Controller
         }
     }
 
-    public function create(GetAllRecordsCategories $getAllRecordsCategories)
+    public function create(GetAllRecordsCategories $getAllRecordsCategories, GetAllRecordsStatus $getAllRecordsStatus)
     {
         $categories = $getAllRecordsCategories->execute() ?? [];
+        $status = $getAllRecordsStatus->execute() ?? [];
 
-        return view('record::Record.form', compact('categories'));
+        return view('record::Record.form', [
+            'categories' => $categories,
+            'status' => $status
+        ]);
     }
 
-    public function get(GetRecord $getUseCase, GetAllRecordsCategories $getCategoriesUseCase, int $id)
+    public function get(GetRecord $getUseCase, GetAllRecordsCategories $getCategoriesUseCase, GetAllRecordsStatus $getAllRecordsStatus, int $id)
     {
         try {
             $record = $getUseCase->execute($id);
             $categories = $getCategoriesUseCase->execute() ?? [];
+            $status = $getAllRecordsStatus->execute() ?? [];
 
             return view('record::Record.form', [
                 'record' => RecordMapper::toResponse($record),
-                'categories' => $categories
+                'categories' => $categories,
+                'status' => $status
             ]);
         } catch (\InvalidArgumentException $e) {
             return redirect()->route('record.index')->withErrors(['error' => 'Registro não encontrado.']);
@@ -57,7 +64,6 @@ class RecordController extends Controller
     public function store(RegisterRecord $registerUseCase, StoreRecordRequest $request)
     {
         try {
-
             $dto = RecordCreateDTO::fromRequest($request);
             $record = $registerUseCase->execute($dto);
 

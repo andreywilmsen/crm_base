@@ -100,21 +100,18 @@
                     {{-- Status --}}
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label for="status">Status</label>
-                            <select name="status" id="status" class="form-control @error('status') is-invalid @enderror"
-                                required>
-                                <option value="pending"
-                                    {{ old('status', $record['status'] ?? '') == 'pending' ? 'selected' : '' }}>
-                                    Pendente
-                                </option>
-                                <option value="completed"
-                                    {{ old('status', $record['status'] ?? '') == 'completed' ? 'selected' : '' }}>
-                                    Concluído</option>
-                                <option value="canceled"
-                                    {{ old('status', $record['status'] ?? '') == 'canceled' ? 'selected' : '' }}>
-                                    Cancelado</option>
+                            <label for="status_id">Status</label>
+                            <select name="status_id" id="status"
+                                class="form-control @error('status_id') is-invalid @enderror" required>
+                                <option value="">Selecione um status</option>
+                                @foreach ($status as $item)
+                                    <option value="{{ $item->getId() }}"
+                                        {{ old('status_id', $record['status_id'] ?? '') == $item->getId() ? 'selected' : '' }}>
+                                        {{ $item->getName() }}
+                                    </option>
+                                @endforeach
                             </select>
-                            @error('status')
+                            @error('status_id')
                                 <span class="invalid-feedback">{{ $message }}</span>
                             @enderror
                         </div>

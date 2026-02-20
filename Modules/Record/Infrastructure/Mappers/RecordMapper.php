@@ -14,7 +14,7 @@ class RecordMapper
             'reference_date' => $record->getReferenceDate(),
             'value'          => $record->getValue(),
             'description'    => $record->getDescription(),
-            'status'         => $record->getStatus(),
+            'status_id'      => $record->getStatusId(),
             'category_id'    => $record->getCategoryId(),
             'user_id'        => $record->getUserId(),
         ];
@@ -34,10 +34,11 @@ class RecordMapper
             referenceDate: $model->reference_date,
             value: (float) $model->value,
             description: $model->description,
-            status: $model->status,
+            statusId: $model->status_id,
             userId: $model->user_id,
             categoryId: $model->category_id,
             categoryName: $model->category?->name,
+            statusName: $model->status?->name,
             username: $model->user?->name
         );
     }
@@ -50,7 +51,8 @@ class RecordMapper
             'reference_date' => $record->getReferenceDate(),
             'value'          => $record->getValue(),
             'description'    => $record->getDescription(),
-            'status'         => $record->getStatus(),
+            'status_id'      => $record->getStatusId(),
+            'status_name'    => $record->getStatusName(),
             'category_id'    => $record->getCategoryId(),
             'category_name'  => $record->getCategoryName(),
             'user_id'        => $record->getUserId(),

@@ -10,6 +10,9 @@
     <div class="card">
         <div class="card-header">
             <a href="{{ route('record.create') }}" class="btn btn-primary">Novo Registro</a>
+            <a href="{{ route('record-category.index') }}" class="btn btn-secondary shadow-sm">
+                <i class="fas fa-tags"></i> Gerenciar Categorias
+            </a>
         </div>
         <div class="card-body">
             @if (session('success'))
@@ -27,6 +30,7 @@
                     <tr>
                         <th style="width: 10px">#</th>
                         <th>Título</th>
+                        <th>Categoria</th>
                         <th>Data Ref.</th>
                         <th>Valor</th>
                         <th>Status</th>
@@ -38,8 +42,14 @@
                         <tr>
                             <td>{{ $record['id'] }}</td>
                             <td>{{ $record['title'] }}</td>
+                            <td>
+                                <span class="badge badge-outline-secondary">
+                                    {{ $record['category_name'] ?? 'Sem Categoria' }}
+                                </span>
+                            </td>
                             <td>{{ \Carbon\Carbon::parse($record['reference_date'])->format('d/m/Y') }}</td>
-                            <td>{{ $record['value'] ? 'R$ ' . number_format($record['value'], 2, ',', '.') : '---' }}</td>                            <td>
+                            <td>{{ $record['value'] ? 'R$ ' . number_format($record['value'], 2, ',', '.') : '---' }}</td>
+                            <td>
                                 <span
                                     class="badge badge-{{ $record['status'] == 'completed' ? 'success' : ($record['status'] == 'pending' ? 'warning' : 'danger') }}">
                                     {{ ucfirst($record['status']) }}

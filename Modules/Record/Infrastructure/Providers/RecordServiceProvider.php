@@ -6,7 +6,9 @@ use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use JeroenNoten\LaravelAdminLte\Events\BuildingMenu;
+use Modules\Record\Domain\Repositories\RecordCategoryRepositoryInterface;
 use Modules\Record\Domain\Repositories\RecordRepositoryInterface;
+use Modules\Record\Infrastructure\Repositories\EloquentRecordCategoryRepository;
 use Modules\Record\Infrastructure\Repositories\EloquentRecordRepository;
 
 class RecordServiceProvider extends ServiceProvider
@@ -14,6 +16,7 @@ class RecordServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->bind(RecordRepositoryInterface::class, EloquentRecordRepository::class);
+        $this->app->bind(RecordCategoryRepositoryInterface::class, EloquentRecordCategoryRepository::class);
     }
     public function boot(Dispatcher $events)
     {

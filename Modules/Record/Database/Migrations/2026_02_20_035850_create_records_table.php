@@ -16,6 +16,7 @@ return new class extends Migration
             $table->text('description');
             $table->string('status');
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('category_id')->constrained('records_categories')->onDelete('restrict');
             $table->timestamps();
         });
     }

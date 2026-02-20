@@ -13,6 +13,8 @@ class Record
         private readonly string $description,
         private readonly string $status,
         private readonly int $userId,
+        private readonly int $categoryId,
+        private ?string $categoryName = null,
         private ?int $id = null,
         private ?string $username = null
     ) {
@@ -54,6 +56,16 @@ class Record
         return $this->userId;
     }
 
+    public function getCategoryId()
+    {
+        return $this->categoryId;
+    }
+
+    public function getCategoryName()
+    {
+        return $this->categoryName;
+    }
+
     public function getUsername()
     {
         return $this->username;
@@ -84,6 +96,10 @@ class Record
             throw new InvalidArgumentException('Campo status é obrigatório.');
         }
 
+        if (empty($this->categoryId)) {
+            throw new InvalidArgumentException('Campo categoria é obrigatório.');
+        }
+
         if (empty($this->userId)) {
             throw new InvalidArgumentException('Campo responsável é obrigatório.');
         }
@@ -100,8 +116,9 @@ class Record
             'value'          => $this->value,
             'description'    => $this->description,
             'status'         => $this->status,
+            'category_id'    => $this->categoryId,
             'user_id'        => $this->userId,
-            'username'      => $this->username,
+            'username'       => $this->username,
         ];
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Record\Application\DTOs;
+namespace Modules\Record\Application\DTOs\Record;
 
 use Illuminate\Http\Request;
 
@@ -12,6 +12,7 @@ readonly class RecordCreateDTO
         public ?float $value,
         public string $description,
         public string $status,
+        public int $categoryId,
         public int $userId,
     ) {}
 
@@ -23,6 +24,7 @@ readonly class RecordCreateDTO
             value: $request->input('value') ?? null,
             description: $request->input('description'),
             status: $request->input('status'),
+            categoryId: $request->input('category_id'),
             userId: (int) $request->user()?->id ?? $request->input('user_id'),
         );
     }
@@ -35,6 +37,7 @@ readonly class RecordCreateDTO
             'value'          => $this->value,
             'description'    => $this->description,
             'status'         => $this->status,
+            'category_id'    => $this->categoryId,
             'user_id'        => $this->userId,
         ];
     }

@@ -61,26 +61,51 @@
 
                 <div class="row">
                     {{-- Data de Referência --}}
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <div class="form-group">
                             <label for="reference_date">Data de Referência</label>
                             <input type="date" name="reference_date"
                                 class="form-control @error('reference_date') is-invalid @enderror" id="reference_date"
                                 value="{{ old('reference_date', isset($record['reference_date']) ? \Carbon\Carbon::parse($record['reference_date'])->format('Y-m-d') : date('Y-m-d')) }}">
-                                @error('reference_date')
+                            @error('reference_date')
+                                <span class="invalid-feedback">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+
+                    {{-- Categoria --}}
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="category_id">Categoria</label>
+                            <select name="category_id" id="category_id"
+                                class="form-control @error('category_id') is-invalid @enderror" required>
+
+                                <option value="">Selecione uma categoria</option>
+
+                                @foreach ($categories as $category)
+                                    <option value="{{ $category->getId() }}"
+                                        {{ old('category_id', $record['category_id'] ?? '') == $category->getId() ? 'selected' : '' }}>
+                                        {{ $category->getName() }}
+                                    </option>
+                                @endforeach
+
+                            </select>
+
+                            @error('category_id')
                                 <span class="invalid-feedback">{{ $message }}</span>
                             @enderror
                         </div>
                     </div>
 
                     {{-- Status --}}
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <div class="form-group">
                             <label for="status">Status</label>
                             <select name="status" id="status" class="form-control @error('status') is-invalid @enderror"
                                 required>
                                 <option value="pending"
-                                    {{ old('status', $record['status'] ?? '') == 'pending' ? 'selected' : '' }}>Pendente
+                                    {{ old('status', $record['status'] ?? '') == 'pending' ? 'selected' : '' }}>
+                                    Pendente
                                 </option>
                                 <option value="completed"
                                     {{ old('status', $record['status'] ?? '') == 'completed' ? 'selected' : '' }}>
@@ -106,15 +131,13 @@
                     @enderror
                 </div>
 
-                @if(isset($record))
+                @if (isset($record))
                     <div class="form-group">
                         <label for="responsible">Última atualização</label>
-                        <input type="text" class="form-control" disabled 
-                            value="{{ $record['username'] }}">
+                        <input type="text" class="form-control" disabled value="{{ $record['username'] }}">
                     </div>
                 @endif
 
-                {{-- Campo Oculto para o User ID (Associa ao usuário logado se for novo) --}}
                 @if (!isset($record))
                     <input type="hidden" name="user_id" value="{{ auth()->id() }}">
                 @endif

@@ -22,7 +22,7 @@ class EloquentRecordRepository implements RecordRepositoryInterface
                 $data
             );
 
-            return RecordMapper::toEntity($model);
+            return RecordMapper::toEntity($model->load(['user', 'category']));
         });
     }
 
@@ -33,7 +33,7 @@ class EloquentRecordRepository implements RecordRepositoryInterface
 
     public function findById(int $id): ?Record
     {
-        $record = $this->recordModel->with('user')->find($id);
+        $record = $this->recordModel->with(['user', 'category'])->find($id);
 
         if (!$record) {
             return null;
@@ -55,7 +55,7 @@ class EloquentRecordRepository implements RecordRepositoryInterface
 
     public function findAll(): array
     {
-        return $this->recordModel->get()
+        return $this->recordModel->with('category')->get()
             ->map(fn($model) => RecordMapper::toEntity($model))
             ->all();
     }

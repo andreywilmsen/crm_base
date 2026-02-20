@@ -2,14 +2,16 @@
 
 namespace Modules\Record\Infrastructure\Controllers;
 
-use Modules\Record\Application\UseCases\RegisterRecord;
 use App\Http\Controllers\Controller;
-use Modules\Record\Application\DTOs\RecordCreateDTO;
-use Modules\Record\Application\DTOs\RecordUpdateDTO;
-use Modules\Record\Application\UseCases\DeleteRecord;
-use Modules\Record\Application\UseCases\GetAllRecords;
-use Modules\Record\Application\UseCases\GetRecord;
-use Modules\Record\Application\UseCases\UpdateRecord;
+use Modules\Record\Application\DTOs\Record\RecordCreateDTO;
+use Modules\Record\Application\DTOs\Record\RecordUpdateDTO;
+use Modules\Record\Application\UseCases\Record\DeleteRecord;
+use Modules\Record\Application\UseCases\Record\GetAllRecords;
+use Modules\Record\Application\UseCases\Record\GetRecord;
+use Modules\Record\Application\UseCases\Record\RegisterRecord;
+use Modules\Record\Application\UseCases\Record\UpdateRecord;
+use Modules\Record\Application\UseCases\RecordCategory\GetAllRecordsCategories;
+use Modules\Record\Infrastructure\Mappers\RecordMapper;
 use Modules\Record\Infrastructure\Requests\StoreRecordRequest;
 use Modules\Record\Infrastructure\Requests\UpdateRecordRequest;
 
@@ -19,27 +21,31 @@ class RecordController extends Controller
     {
         try {
             $records = $getAllRecords->execute();
-            $recordsArray = array_map(fn($record) => $record->toArray(), $records);
+            $recordsArray = array_map(fn($record) => RecordMapper::toResponse($record), $records);
 
-            return view('record::index', ['records' => $recordsArray]);
+            return view('record::Record.index', ['records' => $recordsArray]);
         } catch (\Exception $e) {
             $errors = new \Illuminate\Support\MessageBag(['error' => 'Não foi possível carregar os registros.']);
             return view('record::index', ['records' => []])->with('errors', $errors);
         }
     }
 
-    public function create()
+    public function create(GetAllRecordsCategories $getAllRecordsCategories)
     {
-        return view('record::form');
+        $categories = $getAllRecordsCategories->execute() ?? [];
+
+        return view('record::Record.form', compact('categories'));
     }
 
-    public function get(GetRecord $getUseCase, int $id)
+    public function get(GetRecord $getUseCase, GetAllRecordsCategories $getCategoriesUseCase, int $id)
     {
         try {
             $record = $getUseCase->execute($id);
+            $categories = $getCategoriesUseCase->execute() ?? [];
 
-            return view('record::form', [
-                'record' => $record->toArray(),
+            return view('record::Record.form', [
+                'record' => RecordMapper::toResponse($record),
+                'categories' => $categories
             ]);
         } catch (\InvalidArgumentException $e) {
             return redirect()->route('record.index')->withErrors(['error' => 'Registro não encontrado.']);

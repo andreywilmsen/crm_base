@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Record\Application\UseCases;
+namespace Modules\Record\Application\UseCases\Record;
 
 use Modules\Record\Domain\Repositories\RecordRepositoryInterface;
 

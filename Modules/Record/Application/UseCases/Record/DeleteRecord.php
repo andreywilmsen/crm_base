@@ -1,23 +1,22 @@
 <?php
 
-namespace Modules\Record\Application\UseCases;
+namespace Modules\Record\Application\UseCases\Record;
 
 use InvalidArgumentException;
-use Modules\Record\Domain\Entities\Record;
 use Modules\Record\Domain\Repositories\RecordRepositoryInterface;
 
-class GetRecord
+class DeleteRecord
 {
     public function __construct(private RecordRepositoryInterface $recordRepository) {}
 
-    public function execute(int $id): Record
+    public function execute(int $id): void
     {
-        $record = $this->recordRepository->findById($id);
+        $user = $this->recordRepository->findById($id);
 
-        if (!$record) {
+        if (!$user) {
             throw new InvalidArgumentException('Registro não encontrado.');
         }
 
-        return $record;
+        $this->recordRepository->delete($user);
     }
 }

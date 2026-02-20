@@ -18,6 +18,7 @@ class RecordModel extends Model
         'value',
         'description',
         'status',
+        'category_id',
         'user_id',
     ];
 
@@ -35,5 +36,10 @@ class RecordModel extends Model
     public function user()
     {
         return $this->belongsTo(\App\Models\User::class, 'user_id');
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(RecordCategoryModel::class, 'category_id');
     }
 }

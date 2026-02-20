@@ -19,7 +19,8 @@ class StoreRecordRequest extends FormRequest
             'value'          => 'nullable|numeric|min:0',
             'description'    => 'required|string|max:1000',
             'status'         => 'required|string',
-            'user_id'        => 'required|in:' . auth()->id()
+            'user_id'        => 'required|in:' . auth()->id(),
+            'category_id'    => 'required'
         ];
     }
 
@@ -41,6 +42,7 @@ class StoreRecordRequest extends FormRequest
             'status.string'           => 'O status informado é inválido.',
             'user_id.required'        => 'O responsável pelo registro é obrigatório.',
             'user_id.in'              => 'Você não tem permissão para criar um registro para outro usuário.',
+            'category_id.required'    => 'O campo categoria é obrigatório.',
         ];
     }
 }

@@ -1,11 +1,11 @@
 <?php
 
-namespace Modules\Record\Application\UseCases;
+namespace Modules\Record\Application\UseCases\Record;
 
-use Modules\Record\Application\DTOs\RecordUpdateDTO;
 use Modules\Record\Domain\Entities\Record;
 use Modules\Record\Domain\Repositories\RecordRepositoryInterface;
 use InvalidArgumentException;
+use Modules\Record\Application\DTOs\Record\RecordUpdateDTO;
 
 class UpdateRecord
 {
@@ -26,7 +26,8 @@ class UpdateRecord
             description: $dto->description,
             status: $dto->status,
             userId: $dto->userId,
-            id: $dto->id
+            categoryId: $dto->categoryId,
+            id: $dto instanceof RecordUpdateDTO ? $dto->id : null
         );
         return $this->recordRepository->save($updatedRecord);
     }

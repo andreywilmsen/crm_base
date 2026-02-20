@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Record\Application\DTOs;
+namespace Modules\Record\Application\DTOs\Record;
 
 use Illuminate\Http\Request;
 
@@ -13,6 +13,7 @@ class RecordUpdateDTO
         public readonly ?float $value,
         public readonly string $description,
         public readonly string $status,
+        public readonly int $categoryId,
         public readonly int $userId
     ) {}
 
@@ -25,6 +26,7 @@ class RecordUpdateDTO
             value: $request->value ?? null,
             description: $request->description ?? '',
             status: $request->status,
+            categoryId: (int) $request->input('category_id'),
             userId: (int) auth()->id(),
         );
     }

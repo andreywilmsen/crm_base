@@ -15,8 +15,8 @@ class RecordMapper
             'value'          => $record->getValue(),
             'description'    => $record->getDescription(),
             'status'         => $record->getStatus(),
+            'category_id'    => $record->getCategoryId(),
             'user_id'        => $record->getUserId(),
-            'username'       => $record->getUsername(),
         ];
 
         if ($record->getId()) {
@@ -36,6 +36,8 @@ class RecordMapper
             description: $model->description,
             status: $model->status,
             userId: $model->user_id,
+            categoryId: $model->category_id,
+            categoryName: $model->category?->name,
             username: $model->user?->name
         );
     }
@@ -49,6 +51,8 @@ class RecordMapper
             'value'          => $record->getValue(),
             'description'    => $record->getDescription(),
             'status'         => $record->getStatus(),
+            'category_id'    => $record->getCategoryId(),
+            'category_name'  => $record->getCategoryName(),
             'user_id'        => $record->getUserId(),
             'username'       => $record->getUsername()
         ];

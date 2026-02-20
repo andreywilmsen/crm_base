@@ -19,6 +19,7 @@ class UpdateRecordRequest extends FormRequest
             'value'          => 'nullable|numeric|min:0',
             'description'    => 'required|string|max:1000',
             'status'         => 'required|string',
+            'category_id'    => 'required'
         ];
     }
 
@@ -38,6 +39,7 @@ class UpdateRecordRequest extends FormRequest
             'description.max'         => 'A descrição não pode ultrapassar :max caracteres.',
             'status.required'         => 'O campo status é obrigatório.',
             'status.string'           => 'O status informado é inválido.',
+            'category_id.required'    => 'O campo categoria é obrigatório.',
         ];
     }
 }

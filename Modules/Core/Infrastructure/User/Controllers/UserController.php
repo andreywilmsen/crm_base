@@ -23,10 +23,8 @@ class UserController extends Controller
             return view('user::index', [
                 'users' => $usersArray
             ]);
-        } catch (\InvalidArgumentException $e) {
-            return response()->json(['error' => $e->getMessage()], 400);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Erro interno do servidor.'], 500);
+            return redirect()->route('dashboard')->withErrors(['error' => 'Erro ao carregar usuários.']);
         }
     }
 
@@ -46,10 +44,8 @@ class UserController extends Controller
                 'user' => $user->toArray(),
                 'roles' => $roles
             ]);
-        } catch (\InvalidArgumentException $e) {
-            return response()->json(['error' => $e->getMessage()], 404);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Erro interno do servidor.'], 500);
+            return redirect()->route('user.index')->withErrors(['error' => 'Usuário não encontrado.']);
         }
     }
 
@@ -59,7 +55,7 @@ class UserController extends Controller
             $request->validate(['name' => 'required|string|min:3|max:255', 'email' => 'required|email|unique:users,email', 'password' => 'required|confirmed|min:8', 'role' => 'required']);
 
             $dto = UserCreateDTO::fromRequest($request);
-            $user = $registerUseCase->execute($dto);
+            $registerUseCase->execute($dto);
 
             return redirect()
                 ->route('user.index')
@@ -78,7 +74,7 @@ class UserController extends Controller
             $request->validate(['name' => 'required|string|min:3|max:255', 'email' => 'required|email|unique:users,email,' . $id, 'password' => 'required|confirmed|min:8', 'role' => 'required']);
 
             $dto = UserUpdateDTO::fromRequest($request, $id);
-            $user = $updateUseCase->execute($dto);
+            $updateUseCase->execute($dto);
 
             if (auth()->id() === $id) {
                 auth()->logout();
@@ -94,10 +90,8 @@ class UserController extends Controller
                 ->with('success', 'Usuário atualizado com sucesso!');
         } catch (\Illuminate\Validation\ValidationException $e) {
             throw $e;
-        } catch (\InvalidArgumentException $e) {
-            return response()->json(['error' => $e->getMessage()], 400);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Erro interno do servidor.'], 500);
+            return back()->withErrors(['error' => $e->getMessage()])->withInput();
         }
     }
 
@@ -106,10 +100,8 @@ class UserController extends Controller
         try {
             $deleteUseCase->execute($id);
             return redirect()->route('user.index')->with('success', 'Usuário removido com sucesso!');
-        } catch (\InvalidArgumentException $e) {
-            return response()->json(['error' => $e->getMessage()], 400);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Erro interno do servidor.'], 500);
+            return redirect()->route('user.index')->withErrors(['error' => $e->getMessage()]);
         }
     }
 
@@ -121,10 +113,8 @@ class UserController extends Controller
             return redirect()
                 ->route('user.index')
                 ->with('success', 'Senha redefinida com sucesso para o padrão do sistema!');
-        } catch (\InvalidArgumentException $e) {
-            return back()->withErrors(['error' => $e->getMessage()]);
         } catch (\Exception $e) {
-            return back()->withErrors(['error' => 'Não foi possível resetar a senha. Tente novamente.']);
+            return back()->withErrors(['error' => $e->getMessage()]);
         }
     }
 }

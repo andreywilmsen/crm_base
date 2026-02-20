@@ -60,10 +60,10 @@ class UserGetTest extends TestCase
     }
 
     #[Test]
-    public function it_should_return_404_if_user_not_found(){
+    public function it_should_return_302_if_user_not_found(){
         $this->loginAsAdmin();
 
         $response = $this->get(route('user.show', 99999));
-        $response->assertStatus(404);
+        $response->assertStatus(302);
     }
 }

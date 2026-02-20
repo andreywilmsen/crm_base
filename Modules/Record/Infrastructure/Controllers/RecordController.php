@@ -20,13 +20,11 @@ class RecordController extends Controller
         try {
             $records = $getAllRecords->execute();
             $recordsArray = array_map(fn($record) => $record->toArray(), $records);
-            return view('record::index', [
-                'records' => $recordsArray
-            ]);
-        } catch (\InvalidArgumentException $e) {
-            return response()->json(['error' => $e->getMessage()], 400);
+
+            return view('record::index', ['records' => $recordsArray]);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Erro interno do servidor.'], 500);
+            $errors = new \Illuminate\Support\MessageBag(['error' => 'Não foi possível carregar os registros.']);
+            return view('record::index', ['records' => []])->with('errors', $errors);
         }
     }
 
@@ -44,9 +42,9 @@ class RecordController extends Controller
                 'record' => $record->toArray(),
             ]);
         } catch (\InvalidArgumentException $e) {
-            return response()->json(['error' => $e->getMessage()], 404);
+            return redirect()->route('record.index')->withErrors(['error' => 'Registro não encontrado.']);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Erro interno do servidor.'], 500);
+            return redirect()->route('record.index')->withErrors(['error' => 'Erro interno do servidor.']);
         }
     }
 
@@ -79,9 +77,9 @@ class RecordController extends Controller
         } catch (\Illuminate\Validation\ValidationException $e) {
             throw $e;
         } catch (\InvalidArgumentException $e) {
-            return response()->json(['error' => $e->getMessage()], 400);
+            return back()->withErrors(['error' => $e->getMessage()])->withInput();
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Erro interno do servidor.'], 500);
+            return back()->withErrors(['error' => 'Erro interno ao atualizar.'])->withInput();
         }
     }
 
@@ -91,9 +89,9 @@ class RecordController extends Controller
             $deleteUseCase->execute($id);
             return redirect()->route('record.index')->with('success', 'Registro removido com sucesso!');
         } catch (\InvalidArgumentException $e) {
-            return response()->json(['error' => $e->getMessage()], 400);
+            return redirect()->route('record.index')->withErrors(['error' => $e->getMessage()]);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Erro interno do servidor.'], 500);
+            return redirect()->route('record.index')->withErrors(['error' => 'Erro interno do servidor.']);
         }
     }
 }

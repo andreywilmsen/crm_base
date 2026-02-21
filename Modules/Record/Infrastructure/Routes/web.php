@@ -18,7 +18,10 @@ Route::middleware(['auth', 'role:admin|funcionario'])->prefix('admin')->group(fu
 
     Route::prefix('record-categories')->group(function () {
         Route::get('/', [RecordCategoryController::class, 'index'])->name('record-category.index');
+        Route::get('/create', [RecordCategoryController::class, 'create'])->name('record-category.create');
         Route::post('/', [RecordCategoryController::class, 'store'])->name('record-category.store');
+        Route::get('/{id}', [RecordCategoryController::class, 'get'])->name('record-category.show');
+        Route::put('/{id}', [RecordCategoryController::class, 'update'])->name('record-category.update');
         Route::delete('/{id}', [RecordCategoryController::class, 'destroy'])->name('record-category.destroy');
     });
 

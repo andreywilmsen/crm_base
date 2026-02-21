@@ -4,7 +4,7 @@ namespace Modules\Record\Infrastructure\Requests\RecordCategory;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreRecordCategoryRequest extends FormRequest
+class RecordCategoryRequest extends FormRequest
 {
     public function authorize(): bool
     {

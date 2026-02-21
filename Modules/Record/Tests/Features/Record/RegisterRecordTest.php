@@ -1,7 +1,8 @@
 <?php
 
-namespace Modules\Record\Tests\Features;
+namespace Modules\Record\Tests\Features\Record;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Modules\Record\Tests\Traits\InteractsWithRoles;
 use PHPUnit\Framework\Attributes\Test;
@@ -11,6 +12,26 @@ class RegisterRecordTest extends TestCase
 {
     use RefreshDatabase, InteractsWithRoles;
 
+    private int $statusId;
+    private int $categoryId;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->statusId = DB::table('records_status')->insertGetId([
+            'name' => 'Pendente',
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
+
+        $this->categoryId = DB::table('records_categories')->insertGetId([
+            'name' => 'Consultoria',
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
+    }
+
     #[Test]
     public function a_guest_not_be_register_record()
     {
@@ -19,7 +40,8 @@ class RegisterRecordTest extends TestCase
             'reference_date' => '2026-02-14',
             'value'          => 2500.00,
             'description'    => 'Serviço prestado para a empresa X.',
-            'status'         => 'completed',
+            'status_id'      => $this->statusId,
+            'category_id'    => $this->categoryId,
             'user_id'        => 4,
         ];
 
@@ -44,7 +66,8 @@ class RegisterRecordTest extends TestCase
             'reference_date' => '2026-02-14',
             'value'          => 2500.00,
             'description'    => 'Serviço prestado para a empresa X.',
-            'status'         => 'completed',
+            'status_id'      => $this->statusId,
+            'category_id'    => $this->categoryId,
             'user_id'        => $user->id,
         ];
 
@@ -67,7 +90,8 @@ class RegisterRecordTest extends TestCase
             'reference_date' => '2026-02-14',
             'value'          => 2500.00,
             'description'    => 'Serviço prestado para a empresa X.',
-            'status'         => 'completed',
+            'status_id'      => $this->statusId,
+            'category_id'    => $this->categoryId,
             'user_id'        => $user->id,
         ];
 
@@ -86,7 +110,8 @@ class RegisterRecordTest extends TestCase
             'reference_date' => '2026-02-14',
             'value'          => 2500.00,
             'description'    => '',
-            'status'         => 'completed',
+            'status_id'      => $this->statusId,
+            'category_id'    => $this->categoryId,
             'user_id'        => $user->id,
         ];
 
@@ -105,7 +130,8 @@ class RegisterRecordTest extends TestCase
             'reference_date' => '',
             'value'          => 2500.00,
             'description'    => 'Serviço prestado para a empresa X.',
-            'status'         => 'completed',
+            'status_id'      => $this->statusId,
+            'category_id'    => $this->categoryId,
             'user_id'        => $user->id,
         ];
 
@@ -115,7 +141,7 @@ class RegisterRecordTest extends TestCase
     }
 
     #[Test]
-    public function it_should_block_register_with_empty_status()
+    public function it_should_block_register_with_empty_statusId()
     {
         $user = $this->loginAsFuncionario();
 
@@ -124,13 +150,14 @@ class RegisterRecordTest extends TestCase
             'reference_date' => '2026-02-14',
             'value'          => 2500.00,
             'description'    => 'Serviço prestado para a empresa X.',
-            'status'         => '',
+            'status_id'      => '',
+            'category_id'    => $this->categoryId,
             'user_id'        => $user->id,
         ];
 
         $response = $this->post(route('record.store'), $data);
         $response->assertStatus(302);
-        $response->assertSessionHasErrors(['status']);
+        $response->assertSessionHasErrors(['status_id']);
     }
 
     #[Test]
@@ -143,7 +170,8 @@ class RegisterRecordTest extends TestCase
             'reference_date' => '2026-02-14',
             'value'          => 2500.00,
             'description'    => 'Serviço prestado para a empresa X.',
-            'status'         => '',
+            'status_id'      => $this->statusId,
+            'category_id'    => $this->categoryId,
             'user_id'        => '',
         ];
 
@@ -162,7 +190,8 @@ class RegisterRecordTest extends TestCase
             'reference_date' => 'andrey wilmsen',
             'value'          => 2500.00,
             'description'    => 'Serviço prestado para a empresa X.',
-            'status'         => 'completed',
+            'status_id'      => $this->statusId,
+            'category_id'    => $this->categoryId,
             'user_id'        => $user->id,
         ];
 
@@ -181,7 +210,8 @@ class RegisterRecordTest extends TestCase
             'reference_date' => '2026-02-14',
             'value'          => 'Andrey Wilmsen',
             'description'    => 'Serviço prestado para a empresa X.',
-            'status'         => 'completed',
+            'status_id'      => $this->statusId,
+            'category_id'    => $this->categoryId,
             'user_id'        => $user->id,
         ];
 
@@ -200,7 +230,8 @@ class RegisterRecordTest extends TestCase
             'reference_date' => '2026-02-14',
             'value'          => 2500.00,
             'description'    => 'Serviço prestado para a empresa X.',
-            'status'         => 'completed',
+            'status_id'      => $this->statusId,
+            'category_id'    => $this->categoryId,
             'user_id'        => 4,
         ];
 
@@ -219,7 +250,8 @@ class RegisterRecordTest extends TestCase
             'reference_date' => '2026-02-14',
             'value'          => 2500.00,
             'description'    => 'Serviço prestado para a empresa X.',
-            'status'         => 'completed',
+            'status_id'      => $this->statusId,
+            'category_id'    => $this->categoryId,
             'user_id'        => $user->id,
         ];
 
@@ -238,7 +270,8 @@ class RegisterRecordTest extends TestCase
             'reference_date' => '2026-02-14',
             'value'          => 2500.00,
             'description'    => 'Serviço prestado para a empresa X.',
-            'status'         => 'completed',
+            'status_id'      => $this->statusId,
+            'category_id'    => $this->categoryId,
             'user_id'        => $user->id,
         ];
 
@@ -257,7 +290,8 @@ class RegisterRecordTest extends TestCase
             'reference_date' => '2026-02-14',
             'value'          => 2500.00,
             'description'    => str_repeat('D', 1001),
-            'status'         => 'completed',
+            'status_id'      => $this->statusId,
+            'category_id'    => $this->categoryId,
             'user_id'        => $user->id,
         ];
 
@@ -276,7 +310,8 @@ class RegisterRecordTest extends TestCase
             'reference_date' => '2026-02-14',
             'value'          => -10.50,
             'description'    => 'Tentativa de valor inválido.',
-            'status'         => 'completed',
+            'status_id'      => $this->statusId,
+            'category_id'    => $this->categoryId,
             'user_id'        => $user->id,
         ];
 
@@ -285,24 +320,24 @@ class RegisterRecordTest extends TestCase
         $response->assertSessionHasErrors(['value']);
     }
 
-    // Deve inserir teste de status quando houver tabela de status para verificar se é válido.
+    #[Test]
+    public function it_should_block_register_with_invalid_status()
+    {
+        $user = $this->loginAsAdmin();
 
-    // #[Test]
-    // public function it_should_block_register_with_invalid_status()
-    // {
-    //     $user = $this->loginAsAdmin();
+        $data = [
+            'title'          => 'Venda de Consultoria',
+            'reference_date' => '2026-02-14',
+            'value'          => 2500.00,
+            'description'    => 'Serviço prestado para a empresa X.',
+            'status_id'      => 9999,
+            'category_id'    => $this->categoryId,
+            'user_id'        => $user->id,
+        ];
 
-    //     $data = [
-    //         'title'          => 'Venda de Consultoria',
-    //         'reference_date' => '2026-02-14',
-    //         'value'          => 2500.00,
-    //         'description'    => 'Serviço prestado para a empresa X.',
-    //         'status'         => 'andrey wilmsen',
-    //         'user_id'        => $user->id,
-    //     ];
+        $response = $this->post(route('record.store'), $data);
 
-    //     $response = $this->post(route('record.store'), $data);
-    //     $response->assertStatus(302);
-    //     $response->assertSessionHasErrors(['status']);
-    // }
+        $response->assertStatus(302);
+        $response->assertSessionHasErrors(['status_id']);
+    }
 }

@@ -18,9 +18,9 @@ class StoreRecordRequest extends FormRequest
             'reference_date' => 'required|date',
             'value'          => 'nullable|numeric|min:0',
             'description'    => 'required|string|max:1000',
-            'status_id'      => 'required|integer',
+            'status_id'      => 'required|exists:records_status,id',
             'user_id'        => 'required|in:' . auth()->id(),
-            'category_id'    => 'required|integer'
+            'category_id' => 'required|exists:records_categories,id'
         ];
     }
 

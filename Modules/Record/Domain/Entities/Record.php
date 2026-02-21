@@ -99,7 +99,7 @@ class Record
         }
 
         if ($this->statusId === null || $this->statusId <= 0) {
-            throw new InvalidArgumentException('O campo status é obrigatório.');
+            throw new InvalidArgumentException('Campo status é obrigatório.');
         }
 
         if (empty($this->categoryId)) {

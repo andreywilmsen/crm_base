@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Record\Tests\Features;
+namespace Modules\Record\Tests\Features\Record;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Modules\Core\Tests\Traits\InteractsWithRoles;

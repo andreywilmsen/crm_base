@@ -1,8 +1,9 @@
 <?php
 
-namespace Modules\Record\Tests\Features;
+namespace Modules\Record\Tests\Features\Record;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use Modules\Record\Infrastructure\Persistence\Eloquent\RecordModel;
 use Modules\Record\Tests\Traits\InteractsWithRoles;
 use PHPUnit\Framework\Attributes\Test;
@@ -11,6 +12,26 @@ use Tests\TestCase;
 class UpdateRecordTest extends TestCase
 {
     use RefreshDatabase, InteractsWithRoles;
+
+    private int $statusId;
+    private int $categoryId;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->statusId = DB::table('records_status')->insertGetId([
+            'name' => 'Pendente',
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
+
+        $this->categoryId = DB::table('records_categories')->insertGetId([
+            'name' => 'Consultoria',
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
+    }
 
     #[Test]
     public function a_guest_not_be_update_record()
@@ -25,7 +46,8 @@ class UpdateRecordTest extends TestCase
             'reference_date' => '2026-02-14',
             'value'          => 2500.00,
             'description'    => 'Serviço prestado para a empresa X.',
-            'status'         => 'completed',
+            'status_id'      => $this->statusId,
+            'category_id'    => $this->categoryId,
             'user_id'        => \App\Models\User::max('id') + 1,
         ];
 
@@ -52,7 +74,8 @@ class UpdateRecordTest extends TestCase
             'reference_date' => '2026-02-14',
             'value'          => 2500.00,
             'description'    => 'Serviço prestado para a empresa X.',
-            'status'         => 'completed',
+            'status_id'      => $this->statusId,
+            'category_id'    => $this->categoryId,
             'user_id'        => $user->id,
         ];
 
@@ -80,7 +103,8 @@ class UpdateRecordTest extends TestCase
             'reference_date' => '2026-02-14',
             'value'          => 2500.00,
             'description'    => 'Serviço prestado para a empresa X.',
-            'status'         => 'completed',
+            'status_id'      => $this->statusId,
+            'category_id'    => $this->categoryId,
             'user_id'        => $user->id,
         ];
 
@@ -103,7 +127,8 @@ class UpdateRecordTest extends TestCase
             'reference_date' => '2026-02-14',
             'value'          => 2500.00,
             'description'    => '',
-            'status'         => 'completed',
+            'status_id'      => $this->statusId,
+            'category_id'    => $this->categoryId,
             'user_id'        => $user->id,
         ];
 
@@ -126,7 +151,8 @@ class UpdateRecordTest extends TestCase
             'reference_date' => '',
             'value'          => 2500.00,
             'description'    => 'Serviço prestado para a empresa X.',
-            'status'         => 'completed',
+            'status_id'      => $this->statusId,
+            'category_id'    => $this->categoryId,
             'user_id'        => $user->id,
         ];
 
@@ -149,13 +175,14 @@ class UpdateRecordTest extends TestCase
             'reference_date' => '2026-02-14',
             'value'          => 2500.00,
             'description'    => 'Serviço prestado para a empresa X.',
-            'status'         => '',
+            'status_id'      => '',
+            'category_id'    => $this->categoryId,
             'user_id'        => $user->id,
         ];
 
         $response = $this->put(route('record.update', $recordToUpdate->id), $data);
         $response->assertStatus(302);
-        $response->assertSessionHasErrors(['status']);
+        $response->assertSessionHasErrors(['status_id']);
     }
 
     #[Test]
@@ -172,7 +199,8 @@ class UpdateRecordTest extends TestCase
             'reference_date' => 'andrey wilmsen',
             'value'          => 2500.00,
             'description'    => 'Serviço prestado para a empresa X.',
-            'status'         => 'completed',
+            'status_id'      => $this->statusId,
+            'category_id'    => $this->categoryId,
             'user_id'        => $user->id,
         ];
 
@@ -195,7 +223,8 @@ class UpdateRecordTest extends TestCase
             'reference_date' => '2026-02-14',
             'value'          => 'Andrey Wilmsen',
             'description'    => 'Serviço prestado para a empresa X.',
-            'status'         => 'completed',
+            'status_id'      => $this->statusId,
+            'category_id'    => $this->categoryId,
             'user_id'        => $user->id,
         ];
 
@@ -214,7 +243,8 @@ class UpdateRecordTest extends TestCase
             'title' => 'Titulo Alterado',
             'reference_date' => now()->format('Y-m-d'),
             'description' => 'Desc',
-            'status' => 'active',
+            'status_id'      => $this->statusId,
+            'category_id'    => $this->categoryId,
             'user_id' => 999
         ];
 
@@ -240,7 +270,8 @@ class UpdateRecordTest extends TestCase
             'reference_date' => '2026-02-14',
             'value'          => 2500.00,
             'description'    => 'Serviço prestado para a empresa X.',
-            'status'         => 'completed',
+            'status_id'      => $this->statusId,
+            'category_id'    => $this->categoryId,
             'user_id'        => $user->id,
         ];
 
@@ -263,7 +294,8 @@ class UpdateRecordTest extends TestCase
             'reference_date' => '2026-02-14',
             'value'          => 2500.00,
             'description'    => 'Serviço prestado para a empresa X.',
-            'status'         => 'completed',
+            'status_id'      => $this->statusId,
+            'category_id'    => $this->categoryId,
             'user_id'        => $user->id,
         ];
 
@@ -286,7 +318,8 @@ class UpdateRecordTest extends TestCase
             'reference_date' => '2026-02-14',
             'value'          => 2500.00,
             'description'    => str_repeat('D', 1001),
-            'status'         => 'completed',
+            'status_id'      => $this->statusId,
+            'category_id'    => $this->categoryId,
             'user_id'        => $user->id,
         ];
 
@@ -309,7 +342,8 @@ class UpdateRecordTest extends TestCase
             'reference_date' => '2026-02-14',
             'value'          => -10.50,
             'description'    => 'Tentativa de valor inválido.',
-            'status'         => 'completed',
+            'status_id'      => $this->statusId,
+            'category_id'    => $this->categoryId,
             'user_id'        => $user->id,
         ];
 

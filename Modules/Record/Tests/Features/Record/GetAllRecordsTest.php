@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Record\Tests\Features;
+namespace Modules\Record\Tests\Features\Record;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Modules\Core\Tests\Traits\InteractsWithRoles;
@@ -30,7 +30,7 @@ class GetAllRecordsTest extends TestCase
 
         $response->assertStatus(200);
 
-        $response->assertViewIs('record::index');
+        $response->assertViewIs('record::Record.index');
         $response->assertViewHas('records', function ($viewRecords) {
             return count($viewRecords) === 3;
         });

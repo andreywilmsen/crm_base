@@ -4,6 +4,7 @@ namespace Modules\Record\Infrastructure\Persistence\Eloquent;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Modules\Record\Infrastructure\Database\Factories\RecordStatusModelFactory;
 use Modules\Record\Infrastructure\Persistence\Eloquent\RecordModel;
 
 class RecordStatusModel extends Model
@@ -19,5 +20,10 @@ class RecordStatusModel extends Model
     public function records()
     {
         return $this->hasMany(RecordModel::class, 'status_id');
+    }
+
+    protected static function newFactory()
+    {
+        return RecordStatusModelFactory::new();
     }
 }

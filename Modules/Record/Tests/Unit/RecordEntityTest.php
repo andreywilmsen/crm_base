@@ -3,6 +3,7 @@
 namespace Modules\Record\Tests\Unit;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use Modules\Record\Domain\Entities\Record;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
@@ -10,6 +11,26 @@ use Tests\TestCase;
 class RecordEntityTest extends TestCase
 {
     use RefreshDatabase;
+
+    private int $statusId;
+    private int $categoryId;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->statusId = DB::table('records_status')->insertGetId([
+            'name' => 'Pendente',
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
+
+        $this->categoryId = DB::table('records_categories')->insertGetId([
+            'name' => 'Consultoria',
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
+    }
 
     #[Test]
     public function it_should_instance_record()
@@ -20,7 +41,8 @@ class RecordEntityTest extends TestCase
             referenceDate: '2025-12-25',
             value: 406.3,
             description: 'Fatura de Janeiro',
-            status: 'pending',
+            statusId: $this->statusId,
+            categoryId: $this->categoryId,
             userId: 1,
         );
 
@@ -40,7 +62,8 @@ class RecordEntityTest extends TestCase
             referenceDate: '2025-12-25',
             value: 406.3,
             description: 'Fatura de Janeiro',
-            status: 'pending',
+            statusId: $this->statusId,
+            categoryId: $this->categoryId,
             userId: 1,
         );
     }
@@ -56,7 +79,8 @@ class RecordEntityTest extends TestCase
             referenceDate: '',
             value: 406.3,
             description: 'Fatura de Janeiro',
-            status: 'pending',
+            statusId: $this->statusId,
+            categoryId: $this->categoryId,
             userId: 1,
         );
     }
@@ -72,7 +96,8 @@ class RecordEntityTest extends TestCase
             referenceDate: '2025-12-25',
             value: 406.3,
             description: '',
-            status: 'pending',
+            statusId: $this->statusId,
+            categoryId: $this->categoryId,
             userId: 1,
         );
     }
@@ -88,13 +113,14 @@ class RecordEntityTest extends TestCase
             referenceDate: '2025-12-25',
             value: -406.3,
             description: 'Fatura de Janeiro',
-            status: 'pending',
+            statusId: $this->statusId,
+            categoryId: $this->categoryId,
             userId: 4,
         );
     }
 
     #[Test]
-    public function it_should_block_with_empty_status()
+    public function it_should_block_with_empty_statusId()
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Campo status é obrigatório.');
@@ -104,7 +130,8 @@ class RecordEntityTest extends TestCase
             referenceDate: '2025-12-25',
             value: 406.3,
             description: 'Fatura de Janeiro',
-            status: '',
+            statusId: 0,
+            categoryId: $this->categoryId,
             userId: 1,
         );
     }
@@ -120,7 +147,8 @@ class RecordEntityTest extends TestCase
             referenceDate: '2025-12-25',
             value: 406.3,
             description: 'Fatura de Janeiro',
-            status: 'pending',
+            statusId: $this->statusId,
+            categoryId: $this->categoryId,
             userId: 0,
         );
     }

@@ -4,7 +4,7 @@ namespace Modules\Record\Infrastructure\Requests\RecordStatus;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreRecordStatusRequest extends FormRequest
+class RecordStatusRequest extends FormRequest
 {
     public function authorize(): bool
     {

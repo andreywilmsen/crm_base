@@ -22,9 +22,8 @@ class RecordController extends Controller
     {
         try {
             $records = $getAllRecords->execute();
-            $recordsArray = array_map(fn($record) => RecordMapper::toResponse($record), $records);
 
-            return view('record::Record.index', ['records' => $recordsArray]);
+            return view('record::Record.index', ['records' => $records]);
         } catch (\Exception $e) {
             $errors = new \Illuminate\Support\MessageBag(['error' => 'Não foi possível carregar os registros.']);
             return view('record::index', ['records' => []])->with('errors', $errors);
@@ -50,7 +49,7 @@ class RecordController extends Controller
             $status = $getAllRecordsStatus->execute() ?? [];
 
             return view('record::Record.form', [
-                'record' => RecordMapper::toResponse($record),
+                'record' => $record,
                 'categories' => $categories,
                 'status' => $status
             ]);

@@ -45,23 +45,23 @@
                 <tbody>
                     @foreach ($records as $record)
                         <tr>
-                            <td>{{ $record['id'] }}</td>
-                            <td>{{ $record['title'] }}</td>
+                            <td>{{ $record->id }}</td>
+                            <td>{{ $record->title }}</td>
                             <td>
                                 <span class="badge badge-outline-secondary">
-                                    {{ $record['category_name'] ?? 'Sem Categoria' }}
+                                    {{ $record->categoryName ?? 'Sem Categoria' }}
                                 </span>
                             </td>
-                            <td>{{ \Carbon\Carbon::parse($record['reference_date'])->format('d/m/Y') }}</td>
-                            <td>{{ $record['value'] ? 'R$ ' . number_format($record['value'], 2, ',', '.') : '---' }}</td>
+                            <td>{{ \Carbon\Carbon::parse($record->referenceDate)->format('d/m/Y') }}</td>
+                            <td>{{ $record->value ? 'R$ ' . number_format($record->value, 2, ',', '.') : '---' }}</td>
                             <td>
                                 <span class="badge badge-outline-secondary">
-                                    {{ $record['status_name'] ?? 'Sem Status' }}
+                                    {{ $record->statusName ?? 'Sem Status' }}
                                 </span>
                             </td>
                             <td>
-                                <a href="{{ route('record.show', $record['id']) }}" class="btn btn-sm btn-info">Editar</a>
-                                <form action="{{ route('record.destroy', $record['id']) }}" method="POST"
+                                <a href="{{ route('record.show', $record->id) }}" class="btn btn-sm btn-info">Editar</a>
+                                <form action="{{ route('record.destroy', $record->id) }}" method="POST"
                                     style="display:inline">
                                     @csrf
                                     @method('DELETE')

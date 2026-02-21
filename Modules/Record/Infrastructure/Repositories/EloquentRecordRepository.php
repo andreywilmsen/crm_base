@@ -3,6 +3,7 @@
 namespace Modules\Record\Infrastructure\Repositories;
 
 use Illuminate\Support\Facades\DB;
+use Modules\Record\Application\DTOs\Record\RecordResponseDTO;
 use Modules\Record\Domain\Entities\Record;
 use Modules\Record\Domain\Repositories\RecordRepositoryInterface;
 use Modules\Record\Infrastructure\Mappers\RecordMapper;
@@ -42,6 +43,16 @@ class EloquentRecordRepository implements RecordRepositoryInterface
         return RecordMapper::toEntity($record);
     }
 
+    public function findByIdForResponse(int $id): ?RecordResponseDTO
+    {
+        $record = $this->recordModel->with(['user', 'category', 'status'])->find($id);
+
+        if (!$record) {
+            return null;
+        }
+        return RecordMapper::toResponseDTO($record);
+    }
+
     public function findByTitle(string $title): ?Record
     {
         $record = $this->recordModel->where('title', $title)->first();
@@ -55,8 +66,8 @@ class EloquentRecordRepository implements RecordRepositoryInterface
 
     public function findAll(): array
     {
-        return $this->recordModel->with(['category', 'status'])->get()
-            ->map(fn($model) => RecordMapper::toEntity($model))
+        return $this->recordModel->with(['user', 'category', 'status'])->get()
+            ->map(fn($model) => RecordMapper::toResponseDTO($model))
             ->all();
     }
 }

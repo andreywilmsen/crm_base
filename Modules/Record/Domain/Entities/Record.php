@@ -14,10 +14,7 @@ class Record
         private readonly int $statusId,
         private readonly int $userId,
         private readonly int $categoryId,
-        private ?string $categoryName = null,
         private ?int $id = null,
-        private ?string $username = null,
-        private ?string $statusName = null,
     ) {
         $this->validate();
     }
@@ -52,11 +49,6 @@ class Record
         return $this->statusId;
     }
 
-    public function getStatusName()
-    {
-        return $this->statusName;
-    }
-
     public function getUserId()
     {
         return $this->userId;
@@ -65,16 +57,6 @@ class Record
     public function getCategoryId()
     {
         return $this->categoryId;
-    }
-
-    public function getCategoryName()
-    {
-        return $this->categoryName;
-    }
-
-    public function getUsername()
-    {
-        return $this->username;
     }
 
 
@@ -124,7 +106,6 @@ class Record
             'status_id'      => $this->statusId,
             'category_id'    => $this->categoryId,
             'user_id'        => $this->userId,
-            'username'       => $this->username,
         ];
     }
 }

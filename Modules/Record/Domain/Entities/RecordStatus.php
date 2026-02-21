@@ -9,7 +9,9 @@ class RecordStatus
         private string $name,
         private ?\DateTime $createdAt = null,
         private ?\DateTime $updatedAt = null
-    ) {}
+    ) {
+        $this->validate();
+    }
 
     // Getters
     public function getId(): ?int
@@ -32,5 +34,10 @@ class RecordStatus
         return $this->updatedAt;
     }
 
-    public function validate(): void {}
+    public function validate(): void
+    {
+        if (empty(trim($this->name))) {
+            throw new \InvalidArgumentException('O nome do status é obrigatório.');
+        }
+    }
 }

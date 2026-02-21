@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Record\Infrastructure\Requests;
+namespace Modules\Record\Infrastructure\Requests\Record;
 
 use Illuminate\Foundation\Http\FormRequest;
 

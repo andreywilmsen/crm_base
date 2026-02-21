@@ -13,8 +13,8 @@ use Modules\Record\Application\UseCases\Record\UpdateRecord;
 use Modules\Record\Application\UseCases\RecordCategory\GetAllRecordsCategories;
 use Modules\Record\Application\UseCases\RecordStatus\GetAllRecordsStatus;
 use Modules\Record\Infrastructure\Mappers\RecordMapper;
-use Modules\Record\Infrastructure\Requests\StoreRecordRequest;
-use Modules\Record\Infrastructure\Requests\UpdateRecordRequest;
+use Modules\Record\Infrastructure\Requests\Record\StoreRecordRequest;
+use Modules\Record\Infrastructure\Requests\Record\UpdateRecordRequest;
 
 class RecordController extends Controller
 {

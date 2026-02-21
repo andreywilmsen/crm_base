@@ -7,7 +7,7 @@ use Modules\Record\Application\DTOs\RecordStatus\RecordStatusDTO;
 use Modules\Record\Application\UseCases\RecordStatus\DeleteRecordStatus;
 use Modules\Record\Application\UseCases\RecordStatus\GetAllRecordsStatus;
 use Modules\Record\Application\UseCases\RecordStatus\RegisterRecordStatus;
-use Symfony\Component\HttpFoundation\Request;
+use Modules\Record\Infrastructure\Requests\RecordStatus\StoreRecordStatusRequest;
 
 class RecordStatusController extends Controller
 {
@@ -17,17 +17,23 @@ class RecordStatusController extends Controller
         return view('record::status.index', compact('status'));
     }
 
-    public function store(Request $request, RegisterRecordStatus $useCase)
+    public function store(StoreRecordStatusRequest $request, RegisterRecordStatus $useCase)
     {
         $dto = RecordStatusDTO::fromRequest($request);
         $useCase->execute($dto);
 
-        return redirect()->back()->with('success', 'Categoria salva com sucesso!');
+        return redirect()->back()->with('success', 'Status salvo com sucesso!');
     }
 
     public function destroy(int $id, DeleteRecordStatus $useCase)
     {
-        $useCase->execute($id);
-        return redirect()->back()->with('success', 'Categoria removida!');
+        try {
+            $useCase->execute($id);
+            return redirect()->route('record-status.index')
+                ->with('success', 'Status excluído com sucesso!');
+        } catch (\Exception $e) {
+            return redirect()->route('record-status.index')
+                ->with('error', 'Não é possível excluir: existem registros vinculados a este status.');
+        }
     }
 }

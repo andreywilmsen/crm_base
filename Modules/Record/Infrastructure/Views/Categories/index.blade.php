@@ -7,6 +7,17 @@
 @stop
 
 @section('content')
+    @if (session('error'))
+        <div class="alert alert-danger">
+            {{ session('error') }}
+        </div>
+    @endif
+
+    @if (session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+    @endif
     <div class="row">
         {{-- Formulário de Cadastro Rápido --}}
         <div class="col-md-4">
@@ -19,7 +30,8 @@
                     <div class="card-body">
                         <div class="form-group">
                             <label for="name">Nome da Categoria</label>
-                            <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" placeholder="Ex: Vendas, Aluguel..." required>
+                            <input type="text" name="name" class="form-control @error('name') is-invalid @enderror"
+                                placeholder="Ex: Vendas, Aluguel..." required>
                             @error('name')
                                 <span class="invalid-feedback">{{ $message }}</span>
                             @enderror
@@ -50,7 +62,8 @@
                                     <td>{{ $category->getId() }}</td>
                                     <td>{{ $category->getName() }}</td>
                                     <td>
-                                        <form action="{{ route('record-category.destroy', $category->getId()) }}" method="POST" class="d-inline form-delete">
+                                        <form action="{{ route('record-category.destroy', $category->getId()) }}"
+                                            method="POST" class="d-inline form-delete">
                                             @csrf
                                             @method('DELETE')
                                             <button type="button" class="btn btn-sm btn-danger btn-delete-cat">

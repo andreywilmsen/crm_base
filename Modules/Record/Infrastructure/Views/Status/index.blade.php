@@ -7,6 +7,17 @@
 @stop
 
 @section('content')
+    @if (session('error'))
+        <div class="alert alert-danger">
+            {{ session('error') }}
+        </div>
+    @endif
+
+    @if (session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+    @endif
     <div class="row">
         {{-- Formulário de Cadastro Rápido --}}
         <div class="col-md-4">

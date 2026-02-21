@@ -7,7 +7,7 @@ use Modules\Record\Application\DTOs\RecordCategory\RecordCategoryDTO;
 use Modules\Record\Application\UseCases\RecordCategory\DeleteRecordCategory;
 use Modules\Record\Application\UseCases\RecordCategory\GetAllRecordsCategories;
 use Modules\Record\Application\UseCases\RecordCategory\RegisterRecordCategory;
-use Symfony\Component\HttpFoundation\Request;
+use Modules\Record\Infrastructure\Requests\RecordCategory\StoreRecordCategoryRequest;
 
 class RecordCategoryController extends Controller
 {
@@ -17,7 +17,7 @@ class RecordCategoryController extends Controller
         return view('record::categories.index', compact('categories'));
     }
 
-    public function store(Request $request, RegisterRecordCategory $useCase)
+    public function store(StoreRecordCategoryRequest $request, RegisterRecordCategory $useCase)
     {
         $dto = RecordCategoryDTO::fromRequest($request);
         $useCase->execute($dto);
@@ -25,9 +25,17 @@ class RecordCategoryController extends Controller
         return redirect()->back()->with('success', 'Categoria salva com sucesso!');
     }
 
-    public function destroy(int $id, DeleteRecordCategory $useCase)
+
+    public function destroy($id, DeleteRecordCategory $useCase)
     {
-        $useCase->execute($id);
-        return redirect()->back()->with('success', 'Categoria removida!');
+        try {
+            $useCase->execute($id);
+
+            return redirect()->route('record-category.index')
+                ->with('success', 'Categoria excluída!');
+        } catch (\Exception $e) {
+            return redirect()->route('record-category.index')
+                ->with('error', 'Não é possível excluir: existem registros vinculados a esta categoria.');
+        }
     }
 }

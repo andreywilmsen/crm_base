@@ -5,17 +5,17 @@ namespace Modules\Record\Application\DTOs\Record;
 readonly class RecordResponseDTO
 {
     public function __construct(
-        public int $id,
-        public string $title,
-        public string $referenceDate,
-        public ?float $value,
-        public string $description,
-        public int $statusId,
-        public string $statusName,
-        public int $categoryId,
-        public string $categoryName,
-        public int $userId,
-        public string $username
+        public readonly int $id,
+        public readonly string $title,
+        public readonly string $referenceDate,
+        public readonly ?float $value,
+        public readonly string $description,
+        public readonly int $statusId,
+        public readonly string $statusName,
+        public readonly int $categoryId,
+        public readonly string $categoryName,
+        public readonly int $userId,
+        public readonly string $username
     ) {}
 
     public static function fromArray(array $data): self

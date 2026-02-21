@@ -7,13 +7,13 @@ use Illuminate\Http\Request;
 readonly class RecordCreateDTO
 {
     public function __construct(
-        public string $title,
-        public string $referenceDate,
-        public ?float $value,
-        public string $description,
-        public int $statusId,
-        public int $categoryId,
-        public int $userId,
+        public readonly string $title,
+        public readonly string $referenceDate,
+        public readonly ?float $value,
+        public readonly string $description,
+        public readonly int $statusId,
+        public readonly int $categoryId,
+        public readonly int $userId,
     ) {}
 
     public static function fromRequest(Request $request): self

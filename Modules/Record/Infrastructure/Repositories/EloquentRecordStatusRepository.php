@@ -2,6 +2,7 @@
 
 namespace Modules\Record\Infrastructure\Repositories;
 
+use Illuminate\Support\Facades\DB;
 use Modules\Record\Domain\Entities\RecordStatus as RecordStatusEntity;
 use Modules\Record\Domain\Repositories\RecordStatusRepositoryInterface;
 use Modules\Record\Infrastructure\Mappers\RecordStatusMapper;
@@ -33,14 +34,16 @@ class EloquentRecordStatusRepository implements RecordStatusRepositoryInterface
 
     public function save(RecordStatusEntity $status): RecordStatusEntity
     {
-        $data = RecordStatusMapper::toArray($status);
+        return DB::transaction(function () use ($status) {
+            $data = RecordStatusMapper::toArray($status);
 
-        $model = $this->model->updateOrCreate(
-            ['id' => $status->getId()],
-            $data
-        );
+            $model = $this->model->updateOrCreate(
+                ['id' => $status->getId()],
+                $data
+            );
 
-        return RecordStatusMapper::toEntity($model);
+            return RecordStatusMapper::toEntity($model);
+        });
     }
 
     public function delete(RecordStatusEntity $status): void

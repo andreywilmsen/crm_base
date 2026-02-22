@@ -24,14 +24,10 @@ class RecordCategoryController extends Controller
         }
     }
 
-    public function create(GetAllRecordsCategories $getAllRecordsCategories)
+    public function create()
     {
         try {
-            $categories = $getAllRecordsCategories->execute() ?? [];
-
-            return view('record::Categories.form', [
-                'categories' => $categories,
-            ]);
+            return view('record::Categories.form', []);
         } catch (\InvalidArgumentException $e) {
             return redirect()->route('record-category.index')->withErrors(['error' => $e->getMessage()]);
         } catch (\Exception $e) {

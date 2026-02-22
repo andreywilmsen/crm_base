@@ -5,7 +5,7 @@ use Modules\Record\Infrastructure\Controllers\RecordController;
 use Modules\Record\Infrastructure\Controllers\RecordCategoryController;
 use Modules\Record\Infrastructure\Controllers\RecordStatusController;
 
-Route::middleware(['auth', 'role:admin|funcionario'])->prefix('admin')->group(function () {
+Route::middleware(['auth', 'role:admin|funcionario'])->group(function () {
 
     Route::prefix('record')->group(function () {
         Route::get('/', [RecordController::class, 'index'])->name('record.index');

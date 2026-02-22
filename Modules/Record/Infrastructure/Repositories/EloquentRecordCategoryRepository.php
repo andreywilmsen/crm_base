@@ -2,6 +2,7 @@
 
 namespace Modules\Record\Infrastructure\Repositories;
 
+use Illuminate\Support\Facades\DB;
 use Modules\Record\Domain\Entities\RecordCategory as RecordCategoryEntity;
 use Modules\Record\Domain\Repositories\RecordCategoryRepositoryInterface;
 use Modules\Record\Infrastructure\Mappers\RecordCategoryMapper;
@@ -33,14 +34,16 @@ class EloquentRecordCategoryRepository implements RecordCategoryRepositoryInterf
 
     public function save(RecordCategoryEntity $category): RecordCategoryEntity
     {
-        $data = RecordCategoryMapper::toArray($category);
+        return DB::transaction(function () use ($category) {
+            $data = RecordCategoryMapper::toArray($category);
 
-        $model = $this->model->updateOrCreate(
-            ['id' => $category->getId()],
-            $data
-        );
+            $model = $this->model->updateOrCreate(
+                ['id' => $category->getId()],
+                $data
+            );
 
-        return RecordCategoryMapper::toEntity($model);
+            return RecordCategoryMapper::toEntity($model);
+        });
     }
 
     public function delete(RecordCategoryEntity $category): void

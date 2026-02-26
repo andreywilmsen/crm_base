@@ -2,6 +2,7 @@
 
 namespace Modules\Core\Infrastructure;
 
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 use Modules\Core\Infrastructure\User\Providers\UserServiceProvider;
 use Modules\Core\Infrastructure\Account\Providers\AccountServiceProvider;
@@ -23,7 +24,7 @@ class CoreServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        // Atualmente vazio, pois cada submódulo cuida de suas próprias 
-        // rotas, views e menus através de seus respectivos Providers.
+        $this->loadViewsFrom(__DIR__ . '/../Resources/Views', 'core');
+        Blade::componentNamespace('Modules\\Core\\Resources\\Views\\Components', 'core');
     }
 }

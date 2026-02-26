@@ -2,6 +2,7 @@
 
 namespace Modules\Record\Domain\Repositories;
 
+use Illuminate\Database\Eloquent\Builder;
 use Modules\Record\Application\DTOs\Record\RecordResponseDTO;
 use Modules\Record\Domain\Entities\Record;
 
@@ -18,4 +19,6 @@ interface RecordRepositoryInterface
     public function findByTitle(string $title): ?Record;
 
     public function findAll(): array;
+
+    public function getQueryBuilder(): Builder;
 }

@@ -2,10 +2,13 @@
 
 namespace Modules\Record\Infrastructure\Repositories;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
+use Modules\Core\Infrastructure\Services\TableHandler\Eloquent\TableGenerator;
 use Modules\Record\Application\DTOs\Record\RecordResponseDTO;
 use Modules\Record\Domain\Entities\Record;
 use Modules\Record\Domain\Repositories\RecordRepositoryInterface;
+use Modules\Record\Infrastructure\Presenters\TableSchema;
 use Modules\Record\Infrastructure\Mappers\RecordMapper;
 use Modules\Record\Infrastructure\Persistence\Eloquent\RecordModel;
 
@@ -66,8 +69,13 @@ class EloquentRecordRepository implements RecordRepositoryInterface
 
     public function findAll(): array
     {
-        return $this->recordModel->with(['user', 'category', 'status'])->get()
-            ->map(fn($model) => RecordMapper::toResponseDTO($model))
+        return $this->recordModel->all()
+            ->map(fn($m) => RecordMapper::toEntity($m))
             ->all();
+    }
+
+    public function getQueryBuilder(): Builder
+    {
+        return $this->recordModel->query()->with(['category', 'status', 'user']);
     }
 }

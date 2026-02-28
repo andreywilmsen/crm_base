@@ -3,7 +3,7 @@
 namespace Modules\Record\Infrastructure\Filters;
 
 use Illuminate\Database\Eloquent\Builder;
-use Modules\Core\Infrastructure\Services\TableHandler\Contracts\BaseFilter;
+use Modules\Core\Infrastructure\Table\Filters\BaseFilter;
 
 class CategoryFilter extends BaseFilter
 {

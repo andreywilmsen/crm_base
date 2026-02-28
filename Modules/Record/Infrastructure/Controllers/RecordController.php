@@ -5,10 +5,10 @@ namespace Modules\Record\Infrastructure\Controllers;
 use App\Http\Controllers\Controller;
 use Modules\Record\Application\DTOs\Record\RecordCreateDTO;
 use Modules\Record\Application\DTOs\Record\RecordUpdateDTO;
+use Modules\Record\Application\UseCases\Record\ListRecordsService;
 use Modules\Record\Application\UseCases\Record\DeleteRecord;
 use Modules\Record\Application\UseCases\Record\GetRecord;
 use Modules\Record\Application\UseCases\Record\RegisterRecord;
-use Modules\Record\Application\UseCases\Record\TableUseCase;
 use Modules\Record\Application\UseCases\Record\UpdateRecord;
 use Modules\Record\Application\UseCases\RecordCategory\GetAllRecordsCategories;
 use Modules\Record\Application\UseCases\RecordStatus\GetAllRecordsStatus;
@@ -17,22 +17,13 @@ use Modules\Record\Infrastructure\Requests\Record\UpdateRecordRequest;
 
 class RecordController extends Controller
 {
-    public function index(TableUseCase $tableUseCase, GetAllRecordsCategories $getAllRecordsCategories, GetAllRecordsStatus $getAllRecordsStatus)
+    public function index(ListRecordsService $listRecordService)
     {
         try {
-            $categories = $getAllRecordsCategories->execute();
-            $status = $getAllRecordsStatus->execute();
-            $tableData = $tableUseCase->getTableData($categories, $status);
-
-            return view('record::Record.index', [
-                'records'    => $tableData['records'],
-                'columns'    => $tableData['columns'],
-                'categories' => $categories,
-                'status'     => $status,
-            ]);
+            $viewData = $listRecordService->execute();
+            return view('record::Record.index', $viewData);
         } catch (\Exception $e) {
-            $errors = new \Illuminate\Support\MessageBag(['error' => 'Não foi possível carregar os registros financeiros.']);
-            return view('record::Record.index', ['records' => [], 'columns' => [], 'categories' => [], 'status' => []])->with('errors', $errors);
+            return back()->withErrors(['error' => 'Erro ao carregar tabela: ' . $e->getMessage()]);
         }
     }
 

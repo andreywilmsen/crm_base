@@ -4,11 +4,9 @@ namespace Modules\Record\Infrastructure\Repositories;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
-use Modules\Core\Infrastructure\Services\TableHandler\Eloquent\TableGenerator;
 use Modules\Record\Application\DTOs\Record\RecordResponseDTO;
 use Modules\Record\Domain\Entities\Record;
 use Modules\Record\Domain\Repositories\RecordRepositoryInterface;
-use Modules\Record\Infrastructure\Presenters\TableSchema;
 use Modules\Record\Infrastructure\Mappers\RecordMapper;
 use Modules\Record\Infrastructure\Persistence\Eloquent\RecordModel;
 

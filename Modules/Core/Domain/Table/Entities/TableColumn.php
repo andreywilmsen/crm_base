@@ -1,6 +1,5 @@
 <?php
-
-namespace Modules\Core\Infrastructure\Services\TableHandler\DTO;
+namespace Modules\Core\Domain\Table\Entities;
 
 class TableColumn
 {
@@ -9,6 +8,6 @@ class TableColumn
         public string $label,
         public string $type = 'text',
         public array $options = [],
-        public ?string $filterClass = null
+        public bool $searchable = true
     ) {}
 }

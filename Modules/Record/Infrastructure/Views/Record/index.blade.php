@@ -20,11 +20,12 @@
             </a>
         </div>
         <div class="card-body p-0">
-            <x-core::table-handler :columns="$columns" :records="$records" :routes="[
-                'index' => route('record.index'),
-                'edit' => 'record.show',
-                'delete' => 'record.destroy',
-            ]" />
+            <x-core::dynamic-table 
+                :columns="$columns" 
+                :records="$records" 
+                editRoute="record.show" 
+                deleteRoute="record.destroy" 
+            />
         </div>
     </div>
 @stop

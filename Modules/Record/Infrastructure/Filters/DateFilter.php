@@ -2,7 +2,7 @@
 
 namespace Modules\Record\Infrastructure\Filters;
 
-use Modules\Core\Infrastructure\Services\TableHandler\Contracts\BaseFilter;
+use Modules\Core\Infrastructure\Table\Filters\BaseFilter;
 use Illuminate\Database\Eloquent\Builder;
 
 class DateFilter extends BaseFilter

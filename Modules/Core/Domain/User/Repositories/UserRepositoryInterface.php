@@ -2,6 +2,7 @@
 
 namespace Modules\Core\Domain\User\Repositories;
 
+use Illuminate\Database\Eloquent\Builder;
 use Modules\Core\Domain\User\Entities\User;
 
 interface UserRepositoryInterface {
@@ -17,5 +18,7 @@ interface UserRepositoryInterface {
     public function findByEmail(string $email): ?User;
 
     public function findAll(): array;
+
+    public function getQueryBuilder(): Builder;
 
 }

@@ -3,6 +3,7 @@
 namespace Modules\Core\Infrastructure\User\Repositories;
 
 use App\Models\User as UserModel;
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Support\Facades\DB;
 use InvalidArgumentException;
 use Modules\Core\Domain\User\Entities\User;
@@ -81,5 +82,10 @@ class EloquentUserRepository implements UserRepositoryInterface
         return $this->userModel->with('roles')->get()
             ->map(fn($model) => UserMapper::toEntity($model))
             ->all();
+    }
+
+    public function getQueryBuilder(): EloquentBuilder
+    {
+        return $this->userModel->query();
     }
 }

@@ -7,8 +7,8 @@ use Illuminate\Http\Request;
 use Modules\Core\Application\User\DTOs\UserCreateDTO;
 use Modules\Core\Application\User\DTOs\UserUpdateDTO;
 use Modules\Core\Application\User\UseCases\DeleteUser;
-use Modules\Core\Application\User\UseCases\GetAllUsers;
 use Modules\Core\Application\User\UseCases\GetUser;
+use Modules\Core\Application\User\UseCases\ListRecordsUser;
 use Modules\Core\Application\User\UseCases\RegisterUser;
 use Modules\Core\Application\User\UseCases\ResetPasswordUser;
 use Modules\Core\Application\User\UseCases\UpdateUser;
@@ -16,14 +16,10 @@ use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
-    public function index(GetAllUsers $getAllUseCase)
+    public function index(ListRecordsUser $listRecordsUser)
     {
         try {
-            $users = $getAllUseCase->execute();
-            $usersArray = array_map(fn($user) => $user->toArray(), $users);
-            return view('user::index', [
-                'users' => $usersArray
-            ]);
+            return view('user::index', $listRecordsUser->execute());
         } catch (\Exception $e) {
             return redirect()->route('dashboard')->withErrors(['error' => 'Erro ao carregar usuários.']);
         }

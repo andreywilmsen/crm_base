@@ -3,115 +3,168 @@
 @section('title', isset($user) ? 'Editar Usuário' : 'Novo Usuário')
 
 @section('content_header')
-    <h1>{{ isset($user) ? 'Editar Usuário' : 'Novo Usuário' }}</h1>
+    <div class="d-flex align-items-center">
+        <a href="{{ route('user.index') }}" class="btn btn-default btn-sm border shadow-sm mr-3">
+            <i class="fas fa-arrow-left text-muted"></i>
+        </a>
+        <h1 class="m-0 text-dark">{{ isset($user) ? 'Editar Usuário' : 'Novo Usuário' }}</h1>
+    </div>
 @stop
 
 @section('content')
-    {{-- Alertas de Erro ou Sucesso --}}
-    @if(session('success'))
-        <div class="alert alert-success alert-dismissible">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-            <i class="icon fas fa-check"></i> {{ session('success') }}
-        </div>
-    @endif
+    <div class="mt-3">
+        {{-- Alertas Padronizados --}}
+        @if (session('success'))
+            <div class="alert alert-success shadow-sm border-0 fade show" role="alert">
+                <i class="icon fas fa-check mr-2"></i> {{ session('success') }}
+            </div>
+        @endif
 
-    @if($errors->has('error'))
-        <div class="alert alert-danger alert-dismissible">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-            <i class="icon fas fa-ban"></i> {{ $errors->first('error') }}
-        </div>
-    @endif
+        @if ($errors->any())
+            <div class="alert alert-danger shadow-sm border-0 fade show" role="alert">
+                <ul class="mb-0 list-unstyled">
+                    @foreach ($errors->all() as $error)
+                        <li><i class="fas fa-exclamation-circle mr-2"></i> {{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
 
-    <div class="card card-primary">
-        <div class="card-header">
-            <h3 class="card-title">Dados do Usuário</h3>
-        </div>
-        
-        {{-- Formulário Principal --}}
-        <form action="{{ isset($user) ? route('user.update', $user['id']) : route('user.store') }}" method="POST">
-            @csrf
-            @if(isset($user))
-                @method('PUT')
-            @endif
-
-            <div class="card-body">
-                {{-- Nome --}}
-                <div class="form-group">
-                    <label for="name">Nome Completo</label>
-                    <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" 
-                           id="name" value="{{ old('name', $user['name'] ?? '') }}" placeholder="Digite o nome" required>
-                    @error('name') <span class="invalid-feedback">{{ $message }}</span> @enderror
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-white py-3 border-bottom">
+                <h3 class="card-title text-muted">
+                    <i class="fas fa-user-shield mr-2"></i>
+                    <span class="text-uppercase" style="font-size: 0.85rem; letter-spacing: 1px; font-weight: 700;">
+                        Dados de Acesso e Perfil
+                    </span>
+                </h3>
+                <div class="card-tools">
+                    @if (isset($user))
+                        <span class="badge badge-light border text-secondary px-2 py-1">ID #{{ $user['id'] }}</span>
+                    @endif
                 </div>
+            </div>
 
-                {{-- E-mail --}}
-                <div class="form-group">
-                    <label for="email">E-mail</label>
-                    <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" 
-                           id="email" value="{{ old('email', $user['email'] ?? '') }}" placeholder="usuario@email.com" required>
-                    @error('email') <span class="invalid-feedback">{{ $message }}</span> @enderror
-                </div>
-
-                {{-- Perfil de Acesso --}}
-                <div class="form-group">
-                    <label for="role">Perfil de Acesso</label>
-                    <select name="role" id="role" class="form-control @error('role') is-invalid @enderror" required>
-                        <option value="">Selecione um perfil...</option>
-                        @foreach($roles as $role)
-                            <option value="{{ $role->name }}" 
-                                {{ (old('role') == $role->name || (isset($user) && ($user['role'] ?? '') == $role->name)) ? 'selected' : '' }}>
-                                {{ ucfirst($role->name) }}
-                            </option>
-                        @endforeach
-                    </select>
-                    @error('role') <span class="invalid-feedback">{{ $message }}</span> @enderror
-                </div>
-
-                {{-- Lógica da Senha (Apenas na Criação) --}}
-                @if(!isset($user))
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="password">Senha Inicial</label>
-                                <input type="password" name="password" class="form-control @error('password') is-invalid @enderror" 
-                                       id="password" placeholder="Digite a senha" required>
-                                @error('password') <span class="invalid-feedback">{{ $message }}</span> @enderror
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="password_confirmation">Confirmar Senha</label>
-                                <input type="password" name="password_confirmation" class="form-control" 
-                                       id="password_confirmation" placeholder="Repita a senha" required>
-                            </div>
-                        </div>
-                    </div>
-                @else
-                    {{-- Opções de Segurança (Apenas na Edição) --}}
-                    <div class="form-group mt-4">
-                        <label>Segurança</label>
-                        <br>
-                        <button type="button" class="btn btn-warning btn-reset-password">
-                            <i class="fas fa-sync"></i> Resetar Senha para Padrão
-                        </button>
-                        <p class="text-muted mt-2"><small>A senha voltará para o padrão definido no sistema (padrão de novos usuários).</small></p>
-                    </div>
+            <form action="{{ isset($user) ? route('user.update', $user['id']) : route('user.store') }}" method="POST">
+                @csrf
+                @if (isset($user))
+                    @method('PUT')
                 @endif
-            </div>
 
-            <div class="card-footer text-right">
-                <a href="{{ route('user.index') }}" class="btn btn-default">Cancelar</a>
-                <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-save"></i> {{ isset($user) ? 'Atualizar' : 'Salvar' }}
-                </button>
-            </div>
-        </form>
+                <div class="card-body py-4 bg-light-50">
+                    <div class="row">
+                        {{-- Nome --}}
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="name">Nome Completo</label>
+                                <div class="input-group input-group-sm">
+                                    <div class="input-group-text">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                    <input type="text" name="name"
+                                        class="form-control @error('name') is-invalid @enderror" id="name"
+                                        value="{{ old('name', $user['name'] ?? '') }}" placeholder="Ex: João Silva"
+                                        required>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- E-mail --}}
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="email">E-mail Corporativo</label>
+                                <div class="input-group input-group-sm">
+                                    <div class="input-group-text">
+                                        <i class="fas fa-envelope"></i>
+                                    </div>
+                                    <input type="email" name="email"
+                                        class="form-control @error('email') is-invalid @enderror" id="email"
+                                        value="{{ old('email', $user['email'] ?? '') }}" placeholder="usuario@empresa.com"
+                                        required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-2">
+                        {{-- Perfil de Acesso --}}
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="role">Nível de Permissão</label>
+                                <div class="input-group input-group-sm">
+                                    <div class="input-group-text">
+                                        <i class="fas fa-shield-alt"></i>
+                                    </div>
+                                    <select name="role" id="role"
+                                        class="form-control @error('role') is-invalid @enderror" required>
+                                        <option value="">Selecione...</option>
+                                        @foreach ($roles as $role)
+                                            <option value="{{ $role->name }}"
+                                                {{ old('role') == $role->name || (isset($user) && ($user['role'] ?? '') == $role->name) ? 'selected' : '' }}>
+                                                {{ ucfirst($role->name) }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- Senhas ou Botão de Reset --}}
+                        @if (!isset($user))
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="password">Senha Inicial</label>
+                                    <input type="password" name="password"
+                                        class="form-control form-control-sm @error('password') is-invalid @enderror"
+                                        id="password" placeholder="******" required>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="password_confirmation">Confirmar</label>
+                                    <input type="password" name="password_confirmation" class="form-control form-control-sm"
+                                        id="password_confirmation" placeholder="******" required>
+                                </div>
+                            </div>
+                        @else
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Segurança da Conta</label><br>
+                                    <button type="button"
+                                        class="btn btn-sm btn-outline-warning btn-reset-password shadow-sm px-3">
+                                        <i class="fas fa-key mr-1"></i> Resetar Senha para Padrão
+                                    </button>
+                                </div>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+
+                {{-- Rodapé Padronizado --}}
+                <div class="card-footer bg-white border-top text-right py-3">
+                    <a href="{{ route('user.index') }}" class="btn btn-default border shadow-sm px-3 mr-1 text-dark">
+                        <i class="fas fa-times mr-1 text-muted"></i> Cancelar
+                    </a>
+
+                    <button type="submit" class="btn btn-primary shadow-sm px-3">
+                        <i class="fas fa-check mr-1"></i>
+                        {{ isset($user) ? 'Atualizar' : 'Salvar' }}
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
-    @if(isset($user))
-        <form id="form-reset" action="{{ route('user.reset-password', $user['id']) }}" method="POST" style="display:none;">
-            @csrf
-            @method('PUT')
+
+    @if (isset($user))
+        <form id="form-reset" action="{{ route('user.reset-password', $user['id']) }}" method="POST"
+            style="display:none;">
+            @csrf @method('PUT')
         </form>
     @endif
+@stop
+
+@section('css')
+    <link rel="stylesheet" href="{{ asset('css/forms.css') }}">
 @stop
 
 @section('js')
@@ -120,25 +173,17 @@
         $(document).ready(function() {
             $('.btn-reset-password').on('click', function(e) {
                 e.preventDefault();
-                
                 Swal.fire({
                     title: 'Resetar Senha?',
                     text: "O acesso atual será perdido e a senha voltará ao padrão do sistema!",
                     icon: 'warning',
                     showCancelButton: true,
-                    confirmButtonColor: '#f39c12',
-                    cancelButtonColor: '#d33',
+                    confirmButtonColor: '#dc3545',
                     confirmButtonText: 'Sim, resetar agora!',
-                    cancelButtonText: 'Cancelar'
+                    cancelButtonText: 'Cancelar',
+                    reverseButtons: false
                 }).then((result) => {
-                    if (result.isConfirmed) {
-                        let form = $('#form-reset');
-                        if (form.length) {
-                            form.submit();
-                        } else {
-                            Swal.fire('Erro!', 'Formulário de reset não encontrado.', 'error');
-                        }
-                    }
+                    if (result.isConfirmed) $('#form-reset').submit();
                 });
             });
         });

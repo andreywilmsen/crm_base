@@ -1,0 +1,39 @@
+.input-group {
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    background-color: #fff;
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
+
+.input-group:focus-within {
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, .25);
+}
+
+.input-group-text,
+.input-group .form-control {
+    border: none !important;
+    background-color: transparent !important;
+    box-shadow: none !important;
+}
+
+.input-group-text i {
+    color: #495057 !important;
+    width: 20px;
+    text-align: center;
+    font-size: 0.85rem;
+    display: inline-block !important;
+}
+
+label {
+    font-size: 0.75rem !important;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #6c757d;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.bg-light-50 {
+    background-color: #fafbfc;
+}

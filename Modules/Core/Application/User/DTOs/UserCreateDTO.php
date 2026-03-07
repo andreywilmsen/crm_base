@@ -22,13 +22,4 @@ readonly class UserCreateDTO
             role: $request->input('role')
         );
     }
-
-    public function toArray(): array
-    {
-        return [
-            'name' => $this->name,
-            'email' => $this->email,
-            'password' => $this->password
-        ];
-    }
 }

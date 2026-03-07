@@ -24,13 +24,4 @@ readonly class UserUpdateDTO
             role: $request->input('role')
         );
     }
-
-    public function toArray(): array
-    {
-        return [
-            'name' => $this->name,
-            'email' => $this->email,
-            'password' => $this->password
-        ];
-    }
 }

@@ -8,9 +8,6 @@ use Modules\Record\Infrastructure\Persistence\Eloquent\RecordModel;
 
 class RecordMapper
 {
-    /**
-     * Transforma Entidade em Array (Para o Eloquent salvar)
-     */
     public static function toArray(RecordEntity $record): array
     {
         return [
@@ -25,9 +22,6 @@ class RecordMapper
         ];
     }
 
-    /**
-     * Transforma Model em Entidade (Para a Lógica de Negócio)
-     */
     public static function toEntity(RecordModel $model): RecordEntity
     {
         return new RecordEntity(
@@ -42,10 +36,6 @@ class RecordMapper
         );
     }
 
-    /**
-     * Transforma o Model direto para DTO de Resposta (Performance na Tabela)
-     * Aqui tratamos os relacionamentos do Eloquent para as TableColumns
-     */
     public static function toResponseDTO(RecordModel $model): RecordResponseDTO
     {
         return new RecordResponseDTO(
@@ -60,6 +50,20 @@ class RecordMapper
             categoryName: $model->category?->name ?? 'N/A',
             userId: (int) $model->user_id,
             username: $model->user?->name ?? 'N/A'
+        );
+    }
+
+    public static function fromDTO($dto): RecordEntity
+    {
+        return new RecordEntity(
+            title: $dto->title,
+            referenceDate: $dto->referenceDate,
+            value: $dto->value,
+            description: $dto->description,
+            statusId: $dto->statusId,
+            userId: $dto->userId,
+            categoryId: $dto->categoryId,
+            id: property_exists($dto, 'id') ? $dto->id : null
         );
     }
 }

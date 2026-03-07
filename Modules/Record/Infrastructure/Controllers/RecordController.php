@@ -3,6 +3,7 @@
 namespace Modules\Record\Infrastructure\Controllers;
 
 use App\Http\Controllers\Controller;
+use Modules\Core\Infrastructure\Traits\HandlesErrors;
 use Modules\Record\Application\DTOs\Record\RecordCreateDTO;
 use Modules\Record\Application\DTOs\Record\RecordUpdateDTO;
 use Modules\Record\Application\UseCases\Record\ListRecordsService;
@@ -14,46 +15,39 @@ use Modules\Record\Application\UseCases\RecordCategory\GetAllRecordsCategories;
 use Modules\Record\Application\UseCases\RecordStatus\GetAllRecordsStatus;
 use Modules\Record\Infrastructure\Requests\Record\StoreRecordRequest;
 use Modules\Record\Infrastructure\Requests\Record\UpdateRecordRequest;
+use Exception;
 
 class RecordController extends Controller
 {
+    use HandlesErrors;
+
     public function index(ListRecordsService $listRecordService)
     {
         try {
-            $viewData = $listRecordService->execute();
-            return view('record::Record.index', $viewData);
-        } catch (\Exception $e) {
-            return back()->withErrors(['error' => 'Erro ao carregar tabela: ' . $e->getMessage()]);
+            return view('record::Record.index', $listRecordService->execute());
+        } catch (Exception $e) {
+            return $this->handleException($e);
         }
     }
 
     public function create(GetAllRecordsCategories $getAllRecordsCategories, GetAllRecordsStatus $getAllRecordsStatus)
     {
-        $categories = $getAllRecordsCategories->execute() ?? [];
-        $status = $getAllRecordsStatus->execute() ?? [];
-
         return view('record::Record.form', [
-            'categories' => $categories,
-            'status' => $status
+            'categories' => $getAllRecordsCategories->execute() ?? [],
+            'status' => $getAllRecordsStatus->execute() ?? []
         ]);
     }
 
     public function get(GetRecord $getUseCase, GetAllRecordsCategories $getCategoriesUseCase, GetAllRecordsStatus $getAllRecordsStatus, int $id)
     {
         try {
-            $record = $getUseCase->execute($id);
-            $categories = $getCategoriesUseCase->execute() ?? [];
-            $status = $getAllRecordsStatus->execute() ?? [];
-
             return view('record::Record.form', [
-                'record' => $record,
-                'categories' => $categories,
-                'status' => $status
+                'record' => $getUseCase->execute($id),
+                'categories' => $getCategoriesUseCase->execute() ?? [],
+                'status' => $getAllRecordsStatus->execute() ?? []
             ]);
-        } catch (\InvalidArgumentException $e) {
-            return redirect()->route('record.index')->withErrors(['error' => 'Registro não encontrado.']);
-        } catch (\Exception $e) {
-            return redirect()->route('record.index')->withErrors(['error' => 'Erro interno do servidor.']);
+        } catch (Exception $e) {
+            return $this->handleException($e, 'record.index');
         }
     }
 
@@ -61,15 +55,11 @@ class RecordController extends Controller
     {
         try {
             $dto = RecordCreateDTO::fromRequest($request);
-            $record = $registerUseCase->execute($dto);
+            $registerUseCase->execute($dto);
 
-            return redirect()
-                ->route('record.index')
-                ->with('success', 'Registro inserido com sucesso!');
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            throw $e;
-        } catch (\Exception $e) {
-            return back()->withErrors(['error' => $e->getMessage()])->withInput();
+            return redirect()->route('record.index')->with('success', 'Registro inserido!');
+        } catch (Exception $e) {
+            return $this->handleException($e);
         }
     }
 
@@ -77,17 +67,11 @@ class RecordController extends Controller
     {
         try {
             $dto = RecordUpdateDTO::fromRequest($request, $id);
-            $record = $updateUseCase->execute($dto);
+            $updateUseCase->execute($dto);
 
-            return redirect()
-                ->route('record.index')
-                ->with('success', 'Registro atualizado com sucesso!');
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            throw $e;
-        } catch (\InvalidArgumentException $e) {
-            return back()->withErrors(['error' => $e->getMessage()])->withInput();
-        } catch (\Exception $e) {
-            return back()->withErrors(['error' => 'Erro interno ao atualizar.'])->withInput();
+            return redirect()->route('record.index')->with('success', 'Registro atualizado!');
+        } catch (Exception $e) {
+            return $this->handleException($e);
         }
     }
 
@@ -95,11 +79,9 @@ class RecordController extends Controller
     {
         try {
             $deleteUseCase->execute($id);
-            return redirect()->route('record.index')->with('success', 'Registro removido com sucesso!');
-        } catch (\InvalidArgumentException $e) {
-            return redirect()->route('record.index')->withErrors(['error' => $e->getMessage()]);
-        } catch (\Exception $e) {
-            return redirect()->route('record.index')->withErrors(['error' => 'Erro interno do servidor.']);
+            return redirect()->route('record.index')->with('success', 'Registro removido!');
+        } catch (Exception $e) {
+            return $this->handleException($e, 'record.index');
         }
     }
 }

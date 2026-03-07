@@ -6,6 +6,7 @@ use Modules\Record\Domain\Entities\Record;
 use Modules\Record\Domain\Repositories\RecordRepositoryInterface;
 use InvalidArgumentException;
 use Modules\Record\Application\DTOs\Record\RecordUpdateDTO;
+use Modules\Record\Infrastructure\Mappers\RecordMapper;
 
 class UpdateRecord
 {
@@ -19,16 +20,8 @@ class UpdateRecord
             throw new InvalidArgumentException("Registro com ID {$dto->id} não encontrado.");
         }
 
-        $updatedRecord = new Record(
-            title: $dto->title,
-            referenceDate: $dto->referenceDate,
-            value: $dto->value,
-            description: $dto->description,
-            statusId: $dto->statusId,
-            userId: $dto->userId,
-            categoryId: $dto->categoryId,
-            id: $dto instanceof RecordUpdateDTO ? $dto->id : null
-        );
+        $updatedRecord = RecordMapper::fromDTO($dto);
+
         return $this->recordRepository->save($updatedRecord);
     }
 }

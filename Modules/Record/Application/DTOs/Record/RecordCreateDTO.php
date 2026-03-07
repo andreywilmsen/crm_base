@@ -28,17 +28,4 @@ readonly class RecordCreateDTO
             userId: (int) $request->user()?->id ?? $request->input('user_id'),
         );
     }
-
-    public function toArray(): array
-    {
-        return [
-            'title'          => $this->title,
-            'reference_date' => $this->referenceDate,
-            'value'          => $this->value,
-            'description'    => $this->description,
-            'status_id'      => $this->statusId,
-            'category_id'    => $this->categoryId,
-            'user_id'        => $this->userId,
-        ];
-    }
 }

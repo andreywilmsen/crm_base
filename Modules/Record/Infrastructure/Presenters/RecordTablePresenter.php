@@ -27,18 +27,27 @@ class RecordTablePresenter
      * service e se passada por parâmetro para o presenter
      * 
      */
-    public function render(Builder $query, array $categories, array $status): array
+    public function render(Builder $query, array $options = []): array
     {
-        // 1. Define colunas (variável, Título, tipo de input).
+        $categories = $options['categories'] ?? [];
+        $status = $options['status'] ?? [];
+
+        // 1. Define colunas (Variável correspondente no mapper (passo 4)), Título, Tipo de input).
         $columns = [
             new TableColumn('id', '#', 'text', [], false),
             new TableColumn('title', 'Título', 'text'),
-            new TableColumn('categoryName', 'Categoria', 'select', 
+            new TableColumn(
+                'categoryName',
+                'Categoria',
+                'select',
                 collect($categories)->mapWithKeys(fn($i) => [$i->getName() => $i->getName()])->toArray()
             ),
             new TableColumn('referenceDate', 'Data Ref.', 'date'),
             new TableColumn('value', 'Valor', 'money'),
-            new TableColumn('statusName', 'Status', 'select', 
+            new TableColumn(
+                'statusName',
+                'Status',
+                'select',
                 collect($status)->mapWithKeys(fn($s) => [$s->getName() => $s->getName()])->toArray()
             ),
         ];
@@ -52,7 +61,8 @@ class RecordTablePresenter
             new ValueFilter()
         ];
 
-        // 3. Chama o service do Core usando a Query injetada
+        // 3. Chama o service do Core usando a Query injetada 
+        // (Chama o TableUseCase para orquestrar a filtragem via Pipeline, aplicar a paginação e retornar os dados brutos junto com a definição das colunas.)
         $tableData = $this->tableUseCase->make(
             query: $query,
             columns: $columns,
@@ -61,11 +71,13 @@ class RecordTablePresenter
         );
 
         // 4. Mapeia os resultados
+        // (Transforma os registros brutos do banco de dados (Models) em objetos formatados (DTOs) através do Mapper, 
+        // garantindo que os dados correspondam exatamente aos nomes das colunas definidas para a interface, sem perder a paginação.)
+        // 
+        // Atribui os registros a tableData['records']
         $tableData['records']->setCollection(
             $tableData['records']->getCollection()->map(fn($model) => RecordMapper::toResponseDTO($model))
         );
-
-        $tableData['columns'] = $columns;
 
         return $tableData;
     }

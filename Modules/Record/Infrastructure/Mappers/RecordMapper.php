@@ -8,6 +8,9 @@ use Modules\Record\Infrastructure\Persistence\Eloquent\RecordModel;
 
 class RecordMapper
 {
+    /**
+     * Transforma Entidade em Array (Para o Eloquent salvar)
+     */
     public static function toArray(RecordEntity $record): array
     {
         return [
@@ -22,6 +25,9 @@ class RecordMapper
         ];
     }
 
+    /**
+     * Transforma Model em Entidade (Para a Lógica de Negócio)
+     */
     public static function toEntity(RecordModel $model): RecordEntity
     {
         return new RecordEntity(
@@ -36,22 +42,24 @@ class RecordMapper
         );
     }
 
-    public static function toResponseDTO(mixed $data): RecordResponseDTO
+    /**
+     * Transforma o Model direto para DTO de Resposta (Performance na Tabela)
+     * Aqui tratamos os relacionamentos do Eloquent para as TableColumns
+     */
+    public static function toResponseDTO(RecordModel $model): RecordResponseDTO
     {
-        $isModel = $data instanceof RecordModel;
-
         return new RecordResponseDTO(
-            id: $isModel ? (int) $data->id : (int) $data->getId(),
-            title: $isModel ? $data->title : $data->getTitle(),
-            referenceDate: $isModel ? $data->reference_date : $data->getReferenceDate(),
-            value: $isModel ? (float) $data->value : $data->getValue(),
-            description: $isModel ? $data->description : $data->getDescription(),
-            statusId: $isModel ? $data->status_id : $data->getStatusId(),
-            statusName: $isModel ? ($data->status?->name ?? 'N/A') : 'N/A',
-            categoryId: $isModel ? $data->category_id : $data->getCategoryId(),
-            categoryName: $isModel ? ($data->category?->name ?? 'N/A') : 'N/A',
-            userId: $isModel ? $data->user_id : $data->getUserId(),
-            username: $isModel ? ($data->user?->name ?? 'N/A') : 'N/A'
+            id: (int) $model->id,
+            title: $model->title,
+            referenceDate: $model->reference_date,
+            value: (float) $model->value,
+            description: $model->description,
+            statusId: (int) $model->status_id,
+            statusName: $model->status?->name ?? 'N/A',
+            categoryId: (int) $model->category_id,
+            categoryName: $model->category?->name ?? 'N/A',
+            userId: (int) $model->user_id,
+            username: $model->user?->name ?? 'N/A'
         );
     }
 }

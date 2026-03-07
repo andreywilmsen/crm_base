@@ -20,9 +20,11 @@ class ListRecordsService
     {
         $query = $this->repository->getQueryBuilder();
 
-        $categories = $this->getCategories->execute();
-        $status = $this->getStatus->execute();
+        $options = [
+            'categories' => $this->getCategories->execute(),
+            'status'     => $this->getStatus->execute(),
+        ];
 
-        return $this->presenter->render($query, $categories, $status);
+        return $this->presenter->render($query, $options);
     }
 }

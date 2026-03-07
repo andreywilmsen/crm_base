@@ -30,11 +30,16 @@
                                             </option>
                                         @endforeach
                                     </select>
+                                @elseif ($column->type === 'date')
+                                    <input type="date" name="{{ $column->name }}"
+                                        class="form-control form-control-sm auto-submit border-gray shadow-none"
+                                        value="{{ request($column->name) }}">
                                 @else
                                     <div class="input-group input-group-sm">
                                         <div class="input-group-prepend">
-                                            <span class="input-group-text bg-white border-right-0 text-muted"><i
-                                                    class="fas fa-search fa-xs"></i></span>
+                                            <span class="input-group-text bg-white border-right-0 text-muted">
+                                                <i class="fas fa-search fa-xs"></i>
+                                            </span>
                                         </div>
                                         <input type="text" name="{{ $column->name }}"
                                             class="form-control form-control-sm border-left-0 shadow-none text-filter"

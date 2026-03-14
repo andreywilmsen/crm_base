@@ -3,9 +3,13 @@
 namespace Modules\Record\Domain\Entities;
 
 use InvalidArgumentException;
+use Modules\Core\Domain\Services\File\Domain\File;
 
 class Record
 {
+    /** @var File[] */
+    private array $attachments = [];
+
     public function __construct(
         private readonly string $title,
         private readonly string $referenceDate,
@@ -15,8 +19,10 @@ class Record
         private readonly int $userId,
         private readonly int $categoryId,
         private ?int $id = null,
+        array $attachments = []
     ) {
         $this->validate();
+        $this->attachments = $attachments;
     }
 
     public function getId()
@@ -57,6 +63,16 @@ class Record
     public function getCategoryId()
     {
         return $this->categoryId;
+    }
+
+    public function getAttachments(): array
+    {
+        return $this->attachments;
+    }
+
+    public function addAttachment(File $file): void
+    {
+        $this->attachments[] = $file;
     }
 
 
@@ -106,6 +122,7 @@ class Record
             'status_id'      => $this->statusId,
             'category_id'    => $this->categoryId,
             'user_id'        => $this->userId,
+            'attachments'    => array_map(fn(File $file) => $file->toArray(), $this->attachments),
         ];
     }
 }

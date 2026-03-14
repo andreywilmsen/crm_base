@@ -167,17 +167,73 @@
                         <label for="description" class="small text-uppercase text-muted font-weight-bold">Descrição /
                             Observações</label>
                         <textarea name="description" class="form-control shadow-none @error('description') is-invalid @enderror"
-                            id="description" rows="3" placeholder="Detalhes adicionais para controle interno...">{{ old('description', $record->description ?? '') }}</textarea>
+                            id="description" rows="3" placeholder="Detalhes adicionais...">{{ old('description', $record->description ?? '') }}</textarea>
                     </div>
+
+                    {{-- SEÇÃO DE ANEXOS --}}
+                    <div class="form-group mt-4">
+                        <label class="small text-uppercase text-muted font-weight-bold">Anexos</label>
+                        <div class="border rounded p-3 bg-white shadow-sm">
+                            <div class="custom-file mb-3">
+                                <input type="file" class="custom-file-input" id="attachmentInput"
+                                    data-url="{{ route('attachments.store') }}" data-owner-id="{{ $record->id ?? 0 }}"
+                                    data-owner-type="Modules\Record\Infrastructure\Persistence\Eloquent\RecordModel">
+                                <label class="custom-file-label" for="attachmentInput">Selecionar arquivo...</label>
+                            </div>
+
+                            <div id="attachmentList" class="list-group list-group-flush">
+                                @forelse ($record->attachments ?? [] as $file)
+                                    <div class="list-group-item d-flex justify-content-between align-items-center px-0 py-2"
+                                        id="file-{{ $file['id'] }}">
+                                        <div class="d-flex align-items-center">
+                                            <i class="fas fa-file-alt text-primary mr-3 fa-lg"></i>
+                                            <div class="d-flex flex-column">
+                                                <span class="font-weight-bold text-dark"
+                                                    style="font-size: 0.85rem;">{{ $file['name'] }}</span>
+                                                <small class="text-muted" style="font-size: 0.7rem;">Enviado em:
+                                                    {{ \Carbon\Carbon::parse($file['created_at'])->format('d/m/Y') }}</small>
+                                            </div>
+                                        </div>
+                                        <div class="btn-group">
+                                            <a href="{{ asset('storage/' . $file['path']) }}"
+                                                download="{{ $file['name'] }}"
+                                                class="btn btn-sm btn-light border shadow-sm mr-1">
+                                                <i class="fas fa-download text-primary"></i>
+                                            </a>
+                                            <button type="button"
+                                                class="btn btn-sm btn-light border shadow-sm btn-delete-file"
+                                                data-id="{{ $file['id'] }}">
+                                                <i class="fas fa-trash text-danger"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                @empty
+                                    <div id="no-attachments-message" class="text-center py-3">
+                                        <p class="text-muted small mb-0">Nenhum anexo disponível.</p>
+                                    </div>
+                                @endforelse
+                            </div>
+                        </div>
+                    </div>
+
+                    @section('js')
+                        <script src="{{ asset('js/attachments.js') }}"></script>
+                        <script>
+                            $(document).ready(function() {
+                                initAttachmentManager({
+                                    inputSelector: '#attachmentInput',
+                                    listSelector: '#attachmentList',
+                                    csrfToken: '{{ csrf_token() }}'
+                                });
+                            });
+                        </script>
+                    @stop
 
                     @if (isset($record))
                         <div class="mt-4 p-3 bg-white border rounded d-flex align-items-center justify-content-between">
-                            <span class="small text-muted italic">
-                                <i class="fas fa-history mr-1"></i> Histórico do registro
-                            </span>
-                            <span class="small font-weight-bold text-secondary">
-                                <i class="fas fa-user-edit mr-1 text-light"></i> Editado por: {{ $record->username }}
-                            </span>
+                            <span class="small text-muted italic"><i class="fas fa-history mr-1"></i> Histórico</span>
+                            <span class="small font-weight-bold text-secondary">Editado por:
+                                {{ $record->username }}</span>
                         </div>
                     @else
                         <input type="hidden" name="user_id" value="{{ auth()->id() }}">
@@ -188,10 +244,8 @@
                     <a href="{{ route('record.index') }}" class="btn btn-default border shadow-sm px-3 mr-1 text-dark">
                         <i class="fas fa-times mr-1 text-muted"></i> Cancelar
                     </a>
-
                     <button type="submit" class="btn btn-primary shadow-sm px-3">
-                        <i class="fas fa-check mr-1"></i>
-                        {{ isset($user) ? 'Atualizar' : 'Salvar' }}
+                        <i class="fas fa-check mr-1"></i> {{ isset($record) ? 'Atualizar' : 'Salvar' }}
                     </button>
                 </div>
             </form>
@@ -199,6 +253,22 @@
     </div>
 @stop
 
-@section('css')
-    <link rel="stylesheet" href="{{ asset('css/forms.css') }}">
+@section('js')
+    <script src="{{ asset('js/attachments.js') }}"></script>
+    <script>
+        $(function() {
+            if ($('#attachmentInput').length > 0 && !$('#attachmentInput').is(':disabled')) {
+                initAttachmentManager({
+                    inputSelector: '#attachmentInput',
+                    listSelector: '#attachmentList',
+                    csrfToken: '{{ csrf_token() }}'
+                });
+            }
+        });
+    </script>
 @stop
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script src="{{ asset('js/attachments.js') }}"></script>

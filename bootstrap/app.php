@@ -15,7 +15,9 @@ return Application::configure(basePath: dirname(__DIR__))
             'admin/user',
             'admin/user/*',
             'admin/record',
-            'admin/record/*'
+            'admin/record/*',
+            'attachments',
+            'attachments/*'
         ]);
         $middleware->alias([
             'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,

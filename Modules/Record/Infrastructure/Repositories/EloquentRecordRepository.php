@@ -24,7 +24,7 @@ class EloquentRecordRepository implements RecordRepositoryInterface
                 $data
             );
 
-            return RecordMapper::toEntity($model->load(['user', 'category', 'status']));
+            return RecordMapper::toEntity($model->load(['user', 'category', 'status', 'attachments']));
         });
     }
 
@@ -35,45 +35,36 @@ class EloquentRecordRepository implements RecordRepositoryInterface
 
     public function findById(int $id): ?Record
     {
-        $record = $this->recordModel->with(['user', 'category', 'status'])->find($id);
+        $record = $this->recordModel->with(['user', 'category', 'status', 'attachments'])->find($id);
 
-        if (!$record) {
-            return null;
-        }
+        if (!$record) return null;
 
         return RecordMapper::toEntity($record);
     }
 
     public function findByIdForResponse(int $id): ?RecordResponseDTO
     {
-        $record = $this->recordModel->with(['user', 'category', 'status'])->find($id);
+        $record = $this->recordModel->with(['user', 'category', 'status', 'attachments'])->find($id);
 
-        if (!$record) {
-            return null;
-        }
-        return RecordMapper::toResponseDTO($record);
+        return $record ? RecordMapper::toResponseDTO($record) : null;
     }
 
     public function findByTitle(string $title): ?Record
     {
         $record = $this->recordModel->where('title', $title)->first();
 
-        if (!$record) {
-            return null;
-        }
-
-        return RecordMapper::toEntity($record);
+        return $record ? RecordMapper::toEntity($record) : null;
     }
 
     public function findAll(): array
     {
-        return $this->recordModel->all()
+        return $this->recordModel->with('attachments')->get()
             ->map(fn($m) => RecordMapper::toEntity($m))
             ->all();
     }
 
     public function getQueryBuilder(): Builder
     {
-        return $this->recordModel->query()->with(['category', 'status', 'user']);
+        return $this->recordModel->query()->with(['category', 'status', 'user', 'attachments']);
     }
 }

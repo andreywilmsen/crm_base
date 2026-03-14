@@ -15,7 +15,8 @@ readonly class RecordResponseDTO
         public readonly int $categoryId,
         public readonly string $categoryName,
         public readonly int $userId,
-        public readonly string $username
+        public readonly string $username,
+        public array $attachments = []
     ) {}
 
     public static function fromArray(array $data): self
@@ -31,7 +32,8 @@ readonly class RecordResponseDTO
             categoryId: (int) $data['category_id'],
             categoryName: $data['category_name'] ?? 'N/A',
             userId: (int) $data['user_id'],
-            username: $data['username'] ?? 'N/A'
+            username: $data['username'] ?? 'N/A',
+            attachments: isset($data['attachments']) ? (array) $data['attachments'] : []
         );
     }
 }

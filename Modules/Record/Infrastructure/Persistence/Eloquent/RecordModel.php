@@ -4,11 +4,12 @@ namespace Modules\Record\Infrastructure\Persistence\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Modules\Core\Infrastructure\Services\File\Persistence\Eloquent\Traits\HasAttachments;
 use Modules\Record\Infrastructure\Database\Factories\RecordModelFactory;
 
 class RecordModel extends Model
 {
-    use HasFactory;
+    use HasFactory, HasAttachments;
 
     protected $table = 'records';
 

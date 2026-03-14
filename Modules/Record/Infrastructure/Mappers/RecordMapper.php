@@ -5,6 +5,7 @@ namespace Modules\Record\Infrastructure\Mappers;
 use Modules\Record\Application\DTOs\Record\RecordResponseDTO;
 use Modules\Record\Domain\Entities\Record as RecordEntity;
 use Modules\Record\Infrastructure\Persistence\Eloquent\RecordModel;
+use Modules\Core\Domain\Services\File\Domain\File;
 
 class RecordMapper
 {
@@ -24,6 +25,18 @@ class RecordMapper
 
     public static function toEntity(RecordModel $model): RecordEntity
     {
+        $attachments = $model->relationLoaded('attachments')
+            ? $model->attachments->map(fn($att) => new File(
+                id: $att->id,
+                name: $att->name,
+                path: $att->path,
+                mime: $att->mime,
+                size: $att->size,
+                disk: $att->disk,
+                userId: $att->user_id
+            ))->all()
+            : [];
+
         return new RecordEntity(
             id: $model->id,
             title: $model->title,
@@ -32,7 +45,8 @@ class RecordMapper
             description: $model->description,
             statusId: $model->status_id,
             userId: $model->user_id,
-            categoryId: $model->category_id
+            categoryId: $model->category_id,
+            attachments: $attachments
         );
     }
 
@@ -49,7 +63,8 @@ class RecordMapper
             categoryId: (int) $model->category_id,
             categoryName: $model->category?->name ?? 'N/A',
             userId: (int) $model->user_id,
-            username: $model->user?->name ?? 'N/A'
+            username: $model->user?->name ?? 'N/A',
+            attachments: $model->attachments ? $model->attachments->toArray() : []
         );
     }
 

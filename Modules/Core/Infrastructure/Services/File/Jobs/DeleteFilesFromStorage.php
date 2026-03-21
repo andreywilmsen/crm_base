@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Core\Infrastructure\Jobs;
+namespace Modules\Core\Infrastructure\Services\File\Jobs;
 
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;

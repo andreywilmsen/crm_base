@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\UploadedFile;
 use Modules\Core\Domain\Services\File\Domain\File;
 use Modules\Core\Domain\Services\File\Repositories\FileServiceInterface;
-use Modules\Core\Infrastructure\Jobs\DeleteFilesFromStorage;
+use Modules\Core\Infrastructure\Services\File\Jobs\DeleteFilesFromStorage;
 use Modules\Core\Infrastructure\Services\File\Persistence\Eloquent\AttachmentModel;
 
 class EloquentAttachmentRepository implements FileServiceInterface

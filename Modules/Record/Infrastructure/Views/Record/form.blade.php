@@ -177,7 +177,7 @@
                             <div class="custom-file mb-3">
                                 <input type="file" class="custom-file-input" id="attachmentInput"
                                     data-url="{{ route('attachments.store') }}" data-owner-id="{{ $record->id ?? 0 }}"
-                                    data-owner-type="Modules\Record\Infrastructure\Persistence\Eloquent\RecordModel">
+                                    data-owner-type="record">
                                 <label class="custom-file-label" for="attachmentInput">Selecionar arquivo...</label>
                             </div>
 

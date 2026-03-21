@@ -4,20 +4,28 @@ namespace Modules\Core\Infrastructure\Services\File\Controllers;
 
 use App\Http\Controllers\Controller;
 use Exception;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Modules\Core\Application\Services\File\UseCases\UploadAttachment;
 use Modules\Core\Infrastructure\Services\File\Requests\UploadAttachmentRequest;
-use Illuminate\Http\JsonResponse;
 use Modules\Core\Application\Services\File\UseCases\DeleteAttachment;
 use Modules\Core\Infrastructure\Services\File\Requests\DeleteAttachmentRequest;
+use Modules\Core\Infrastructure\Traits\HandlesErrors;
 
 class AttachmentController extends Controller
 {
+    use HandlesErrors;
+
     public function __construct(
         private readonly UploadAttachment $uploadAttachmentUseCase,
         private readonly DeleteAttachment $deleteAttachmentUseCase
     ) {}
 
-    public function store(UploadAttachmentRequest $request): JsonResponse
+    /**
+     * @param UploadAttachmentRequest $request
+     * @return JsonResponse|RedirectResponse
+     */
+    public function store(UploadAttachmentRequest $request): JsonResponse|RedirectResponse
     {
         try {
             $fileEntity = $this->uploadAttachmentUseCase->execute(
@@ -26,6 +34,10 @@ class AttachmentController extends Controller
                 $request->file('file'),
                 $request->get('folder', 'uploads')
             );
+
+            if (!$request->expectsJson()) {
+                return redirect()->back()->with('success', 'Arquivo anexado com sucesso.');
+            }
 
             return response()->json([
                 'success' => true,
@@ -37,10 +49,19 @@ class AttachmentController extends Controller
         }
     }
 
-    public function destroy(int $id, DeleteAttachmentRequest $request): JsonResponse
+    /**
+     * @param int $id
+     * @param DeleteAttachmentRequest $request
+     * @return JsonResponse|RedirectResponse
+     */
+    public function destroy(int $id, DeleteAttachmentRequest $request): JsonResponse|RedirectResponse
     {
         try {
             $success = $this->deleteAttachmentUseCase->execute($id);
+
+            if (!$request->expectsJson()) {
+                return redirect()->back()->with('success', 'Arquivo removido com sucesso.');
+            }
 
             return response()->json([
                 'success' => $success,

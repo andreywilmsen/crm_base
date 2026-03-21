@@ -2,6 +2,7 @@
 
 namespace Modules\Core\Infrastructure;
 
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 use Modules\Core\Infrastructure\User\Providers\UserServiceProvider;
@@ -21,5 +22,8 @@ class CoreServiceProvider extends ServiceProvider
     {
         $this->loadViewsFrom(__DIR__ . '/../Resources/Views', 'core');
         Blade::componentNamespace('Modules\\Core\\Resources\\Views\\Components', 'core');
+        Relation::morphMap([
+            'record' => \Modules\Record\Infrastructure\Persistence\Eloquent\RecordModel::class,
+        ], false);
     }
 }

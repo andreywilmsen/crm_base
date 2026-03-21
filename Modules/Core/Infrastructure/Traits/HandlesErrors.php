@@ -19,8 +19,15 @@ trait HandlesErrors
             'line' => $e->getLine()
         ]);
 
-        $redirect = $route ? redirect()->route($route) : back();
+        if (request()->expectsJson()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Ocorreu um erro interno.',
+                'error'   => $e->getMessage()
+            ], 500);
+        }
 
+        $redirect = $route ? redirect()->route($route) : back();
         return $redirect->withInput()->withErrors(['error' => $e->getMessage()]);
     }
 }

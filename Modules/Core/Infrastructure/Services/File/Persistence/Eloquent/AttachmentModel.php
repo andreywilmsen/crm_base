@@ -20,6 +20,8 @@ class AttachmentModel extends Model
         'attachable_type'
     ];
 
+    protected $appends = ['url'];
+
     public function attachable()
     {
         return $this->morphTo();

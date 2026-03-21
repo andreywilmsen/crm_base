@@ -2,10 +2,11 @@
 
 namespace Modules\Core\Infrastructure\Services\File\Repositories;
 
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
 use Modules\Core\Domain\Services\File\Domain\File;
 use Modules\Core\Domain\Services\File\Repositories\FileServiceInterface;
+use Modules\Core\Infrastructure\Jobs\DeleteFilesFromStorage;
 use Modules\Core\Infrastructure\Services\File\Persistence\Eloquent\AttachmentModel;
 
 class EloquentAttachmentRepository implements FileServiceInterface
@@ -32,11 +33,14 @@ class EloquentAttachmentRepository implements FileServiceInterface
 
     public function createAttachment(int $ownerId, string $ownerType, File $file): File
     {
-        if (!class_exists($ownerType)) {
-            throw new \InvalidArgumentException("O tipo de proprietário [{$ownerType}] não existe.");
+
+        $actualClass = Relation::getMorphedModel($ownerType);
+
+        if (!$actualClass) {
+            throw new \InvalidArgumentException("Tipo de anexo inválido.");
         }
 
-        $owner = $ownerType::findOrFail($ownerId);
+        $owner = $actualClass::findOrFail($ownerId);
 
         $model = $owner->attachments()->create([
             'name'    => $file->name,
@@ -60,13 +64,14 @@ class EloquentAttachmentRepository implements FileServiceInterface
 
     public function delete(string $path, string $disk = 'public'): bool
     {
-        return Storage::disk($disk)->delete($path);
+        DeleteFilesFromStorage::dispatch($path, $disk);
+
+        return true;
     }
 
     public function deleteAttachment(int $id): void
     {
         $register = AttachmentModel::find($id);
-
         if ($register) {
             $register->delete();
         }

@@ -26,6 +26,15 @@ class DeleteFilesFromStorage implements ShouldQueue
     {
         if (Storage::disk($this->disk)->exists($this->path)) {
             Storage::disk($this->disk)->delete($this->path);
+            $folder = dirname($this->path);
+            if ($folder !== '.' && Storage::disk($this->disk)->exists($folder)) {
+                $files = Storage::disk($this->disk)->files($folder);
+                $subfolders = Storage::disk($this->disk)->directories($folder);
+
+                if (empty($files) && empty($subfolders)) {
+                    Storage::disk($this->disk)->deleteDirectory($folder);
+                }
+            }
         }
     }
 }

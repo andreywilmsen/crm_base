@@ -27,12 +27,14 @@ class AttachmentController extends Controller
      */
     public function store(UploadAttachmentRequest $request): JsonResponse|RedirectResponse
     {
+        $folder = "uploads/{$request->owner_type}/{$request->owner_id}";
+
         try {
             $fileEntity = $this->uploadAttachmentUseCase->execute(
                 $request->owner_id,
                 $request->owner_type,
                 $request->file('file'),
-                $request->get('folder', 'uploads')
+                $folder
             );
 
             if (!$request->expectsJson()) {

@@ -4,6 +4,7 @@ namespace Modules\Core\Infrastructure\Services\File\Repositories;
 
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Modules\Core\Domain\Services\File\Domain\File;
 use Modules\Core\Domain\Services\File\Repositories\FileServiceInterface;
 use Modules\Core\Infrastructure\Services\File\Jobs\DeleteFilesFromStorage;
@@ -18,14 +19,60 @@ class EloquentAttachmentRepository implements FileServiceInterface
         }
 
         $disk = 'public';
-        $path = $file->store($folder, $disk);
+        $mimeType = $file->getMimeType();
+        $fileName = $file->getClientOriginalName();
+        $fileSize = (int) $file->getSize();
+
+        $allowedMimes = ['image/jpg', 'image/jpeg', 'image/png', 'image/webp'];
+
+        if (in_array($mimeType, $allowedMimes)) {
+            $newFileName = pathinfo($file->hashName(), PATHINFO_FILENAME) . '.webp';
+            $path = $folder . '/' . $newFileName;
+
+            $image = match ($mimeType) {
+                'image/jpg' => @imagecreatefromjpeg($file->getRealPath()),
+                'image/jpeg' => @imagecreatefromjpeg($file->getRealPath()),
+                'image/png'  => @imagecreatefrompng($file->getRealPath()),
+                'image/webp' => @imagecreatefromwebp($file->getRealPath()),
+                default => null
+            };
+
+            if ($image) {
+                ini_set('memory_limit', config('app.image_memory_limit', '128M'));
+
+                ob_start();
+
+                imagepalettetotruecolor($image);
+                imagealphablending($image, true);
+                imagesavealpha($image, true);
+
+                imagewebp($image, null, 80);
+                $content = ob_get_clean();
+
+                imagedestroy($image);
+
+                if (!Storage::disk($disk)->exists($folder)) {
+                    Storage::disk($disk)->makeDirectory($folder);
+                }
+
+                Storage::disk($disk)->put($path, $content);
+
+                $fileName = pathinfo($fileName, PATHINFO_FILENAME) . '.webp';
+                $fileSize = strlen($content);
+                $mimeType = 'image/webp';
+            } else {
+                $path = $file->store($folder, $disk);
+            }
+        } else {
+            $path = $file->store($folder, $disk);
+        }
 
         return new File(
             id: null,
-            name: $file->getClientOriginalName(),
+            name: $fileName,
             path: $path,
-            mime: $file->getMimeType(),
-            size: (int) $file->getSize(),
+            mime: $mimeType,
+            size: $fileSize,
             disk: $disk,
             userId: auth()->id() ?? 0
         );
@@ -33,7 +80,6 @@ class EloquentAttachmentRepository implements FileServiceInterface
 
     public function createAttachment(int $ownerId, string $ownerType, File $file): File
     {
-
         $actualClass = Relation::getMorphedModel($ownerType);
 
         if (!$actualClass) {
@@ -65,7 +111,6 @@ class EloquentAttachmentRepository implements FileServiceInterface
     public function delete(string $path, string $disk = 'public'): bool
     {
         DeleteFilesFromStorage::dispatch($path, $disk);
-
         return true;
     }
 

@@ -7,6 +7,8 @@ use Modules\Core\Domain\Services\File\Domain\File;
 
 class Record
 {
+    public const PATH_STORAGE = 'record';
+
     /** @var File[] */
     private array $attachments = [];
 

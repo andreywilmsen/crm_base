@@ -123,4 +123,5 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    'image_memory_limit' => env('IMAGE_MEMORY_LIMIT', '128M'),
 ];

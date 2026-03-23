@@ -9,8 +9,10 @@ class UploadAttachment
 {
     public function __construct(public readonly FileServiceInterface $repository) {}
 
-    public function execute(int $ownerId, string $ownerType, mixed $file, string $folder)
+    public function execute(int $ownerId, string $ownerType, mixed $file)
     {
+        $folder = "uploads/{$ownerType}/{$ownerId}";
+
         $fileEntity = $this->repository->store($file, $folder);
 
         try {

@@ -14,7 +14,7 @@ class UploadAttachmentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'file' => 'required|file|mimes:pdf,jpg,jpeg,png,docx,doc,zip,rar,xlsx|max:20480',
+            'file' => 'required|file|mimes:pdf,jpg,jpeg,png,webp,docx,doc,zip,rar,xlsx|max:20480',
             'folder' => 'nullable|string|max:50',
             'owner_id'   => 'required|integer|min:1',
             'owner_type' => 'required|string',

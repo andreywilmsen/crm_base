@@ -27,15 +27,8 @@ class AttachmentController extends Controller
      */
     public function store(UploadAttachmentRequest $request): JsonResponse|RedirectResponse
     {
-        $folder = "uploads/{$request->owner_type}/{$request->owner_id}";
-
         try {
-            $fileEntity = $this->uploadAttachmentUseCase->execute(
-                $request->owner_id,
-                $request->owner_type,
-                $request->file('file'),
-                $folder
-            );
+            $fileEntity = $this->uploadAttachmentUseCase->execute($request->owner_id, $request->owner_type, $request->file('file'));
 
             if (!$request->expectsJson()) {
                 return redirect()->back()->with('success', 'Arquivo anexado com sucesso.');

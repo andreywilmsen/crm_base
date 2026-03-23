@@ -13,10 +13,6 @@ class DeleteFilesFromStorage implements ShouldQueue
 {
     use Dispatchable, InteractsWithRoles, Queueable, SerializesModels;
 
-    /**
-     * @param string $path
-     * @param string $disk
-     */
     public function __construct(
         private readonly string $path,
         private readonly string $disk = 'public'
@@ -24,16 +20,20 @@ class DeleteFilesFromStorage implements ShouldQueue
 
     public function handle(): void
     {
-        if (Storage::disk($this->disk)->exists($this->path)) {
-            Storage::disk($this->disk)->delete($this->path);
-            $folder = dirname($this->path);
-            if ($folder !== '.' && Storage::disk($this->disk)->exists($folder)) {
-                $files = Storage::disk($this->disk)->files($folder);
-                $subfolders = Storage::disk($this->disk)->directories($folder);
+        $storage = Storage::disk($this->disk);
 
-                if (empty($files) && empty($subfolders)) {
-                    Storage::disk($this->disk)->deleteDirectory($folder);
-                }
+        if ($storage->exists($this->path)) {
+            $storage->delete($this->path);
+        }
+        $folder = dirname($this->path);
+
+        if (!in_array($folder, ['.', 'uploads', 'public']) && $storage->exists($folder)) {
+
+            $files = $storage->allFiles($folder);
+            $subfolders = $storage->directories($folder);
+
+            if (empty($files) && empty($subfolders)) {
+                $storage->deleteDirectory($folder);
             }
         }
     }

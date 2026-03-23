@@ -20,18 +20,38 @@ class EloquentAttachmentRepository implements FileServiceInterface
 
         $disk = 'public';
         $mimeType = $file->getMimeType();
-        $fileName = $file->getClientOriginalName();
+        $originalName = $file->getClientOriginalName();
         $fileSize = (int) $file->getSize();
 
-        $allowedMimes = ['image/jpg', 'image/jpeg', 'image/png', 'image/webp'];
+        $extension = pathinfo($originalName, PATHINFO_EXTENSION);
+        $nameOnly = pathinfo($originalName, PATHINFO_FILENAME);
+        $safeName = \Illuminate\Support\Str::slug($nameOnly) . '.' . $extension;
 
-        if (in_array($mimeType, $allowedMimes)) {
+        $allowedMimes = [
+            'image/jpg',
+            'image/jpeg',
+            'image/png',
+            'image/webp',
+            'application/pdf',
+            'application/msword',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'application/zip',
+            'application/x-rar-compressed',
+            'application/x-rar'
+        ];
+
+        if (!\Modules\Core\Infrastructure\Services\File\Validators\FileValidator::hasValidMime($file, $allowedMimes)) {
+            throw new \InvalidArgumentException("O conteúdo do arquivo é inválido ou malicioso.");
+        }
+
+        $imageMimes = ['image/jpg', 'image/jpeg', 'image/png', 'image/webp'];
+
+        if (in_array($mimeType, $imageMimes)) {
             $newFileName = pathinfo($file->hashName(), PATHINFO_FILENAME) . '.webp';
             $path = $folder . '/' . $newFileName;
 
             $image = match ($mimeType) {
-                'image/jpg' => @imagecreatefromjpeg($file->getRealPath()),
-                'image/jpeg' => @imagecreatefromjpeg($file->getRealPath()),
+                'image/jpg', 'image/jpeg' => @imagecreatefromjpeg($file->getRealPath()),
                 'image/png'  => @imagecreatefrompng($file->getRealPath()),
                 'image/webp' => @imagecreatefromwebp($file->getRealPath()),
                 default => null
@@ -39,16 +59,12 @@ class EloquentAttachmentRepository implements FileServiceInterface
 
             if ($image) {
                 ini_set('memory_limit', config('app.image_memory_limit', '128M'));
-
                 ob_start();
-
                 imagepalettetotruecolor($image);
                 imagealphablending($image, true);
                 imagesavealpha($image, true);
-
                 imagewebp($image, null, 80);
                 $content = ob_get_clean();
-
                 imagedestroy($image);
 
                 if (!Storage::disk($disk)->exists($folder)) {
@@ -57,14 +73,16 @@ class EloquentAttachmentRepository implements FileServiceInterface
 
                 Storage::disk($disk)->put($path, $content);
 
-                $fileName = pathinfo($fileName, PATHINFO_FILENAME) . '.webp';
+                $fileName = pathinfo($safeName, PATHINFO_FILENAME) . '.webp';
                 $fileSize = strlen($content);
                 $mimeType = 'image/webp';
             } else {
-                $path = $file->store($folder, $disk);
+                $path = $file->storeAs($folder, $safeName, $disk);
+                $fileName = $safeName;
             }
         } else {
-            $path = $file->store($folder, $disk);
+            $path = $file->storeAs($folder, $safeName, $disk);
+            $fileName = $safeName;
         }
 
         return new File(
